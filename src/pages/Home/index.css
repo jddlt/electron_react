@@ -1,0 +1,21 @@
+.container{
+  display: grid;
+  margin-top: 10px;
+  grid-template-columns: repeat(auto-fill, 130px);
+  row-gap: 12px;
+  column-gap: 12px;
+  justify-content: space-evenly;
+}
+
+.item{
+  font-size: 100px;
+  width: 100%;
+  height: 130px;
+  text-align: center;
+  line-height: 130px;
+  color: rgba(7, 255, 119, .7);
+  background-color: rgba(125, 238, 253, .1);
+  border: 1px solid rgb(125, 238, 253);
+  border-radius: 10px;
+  cursor: pointer;
+}
