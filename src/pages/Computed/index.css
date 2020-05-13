@@ -1,3 +1,8 @@
+.computed{
+  padding: 12px;
+  box-sizing: border-box;
+}
+
 .box{
   width: 200px;
   height: 200px;

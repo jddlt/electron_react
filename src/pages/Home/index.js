@@ -7,7 +7,10 @@ import { AppleOutlined, AndroidOutlined, DingdingOutlined, IeOutlined, WeiboCirc
 import './index.css'
 const { TabPane } = Tabs
 
-const operations = <Link to='computed'><Button type="primary">统计</Button></Link>
+const operations = <>
+  <Link to='/computed'><Button type="primary">统计</Button></Link>
+  <Link to='/login'><Button style={{marginLeft: '6px'}}>退出登陆</Button></Link>
+</>
 
 export default () => {
   const [isShow, setIsShow] = useState(false)
@@ -15,7 +18,7 @@ export default () => {
     setIsShow(flag)
   }
   return (
-    <>
+    <div className='home'>
     <Tabs defaultActiveKey="1" tabBarExtraContent={operations}>
       <TabPane tab={ <span> <AppleOutlined /> 全部 </span> } key="1" >
         <div className='container'>
@@ -40,6 +43,6 @@ export default () => {
       </TabPane>
     </Tabs>
     <Drawer isShow={isShow} set={set}></Drawer>
-    </>
+    </div>
   )
 }

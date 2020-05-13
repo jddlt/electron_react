@@ -1,0 +1,42 @@
+.login{
+  width: 100%;
+  height: 100vh;
+  overflow-y: hidden;
+  background: url('./../../static/imgs/bg.jpg') no-repeat center;
+  background-size: 100% 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.modle{
+  width: 350px;
+  height: 250px;
+  background-color: #fff;
+  box-shadow: 0 0 10px #ccc;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.title{
+  text-align: center;
+  font-size: 40px;
+  color: #fff;
+  font-weight: bolder;
+  margin-bottom: 15px;
+  margin-top: -40px;
+  letter-spacing: 10px;
+  color: green;
+  text-shadow: 0 0 10px #ccc;
+}
+Input:-webkit-autofill { 
+	box-shadow: 0 0 0px 1000px #fff inset !important; 
+	text-fill-color: #1a1a1a;
+	-webkit-text-fill-color: #1a1a1a; 
+}
+Table Button:hover {
+  /* color: #fff !important; */
+  text-decoration: underline !important;
+}
