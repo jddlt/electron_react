@@ -9,7 +9,7 @@ export default (props) => {
       placement="right"
       width='420'
       closable={true}
-      onClose={() => {console.log(1111); props.set && props.set(false)}}
+      onClose={() => { props.set && props.set(false) }}
       visible={props.isShow}
     >
       <Form style={{paddingLeft: '10px', paddingTop: '15px'}}>
