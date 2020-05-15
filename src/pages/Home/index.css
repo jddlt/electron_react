@@ -24,3 +24,6 @@
   border-radius: 10px;
   cursor: pointer;
 }
+.item:hover{
+  color: rgb(255, 147, 7);
+}

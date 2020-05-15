@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Input, message } from 'antd'
+import { Form, Button, Input, message, Spin } from 'antd'
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 // import { browserHistory } from 'react-router'
 import { Redirect } from "react-router-dom";
@@ -10,10 +10,15 @@ export default () => {
 
   const [form, setForm] = useState({ name: '', pwd: '' })
   const [isLogin, setIsLogin] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const login = () => {
     if (form.name === 'admin' && form.pwd === '123456') {
-      setIsLogin(true)
+      setIsLoading(true)
+      setTimeout(() => {
+        setIsLoading(false)
+        setIsLogin(true)
+      }, 1500)
     } else {
       message.error('账号或密码不正确')
       return
@@ -46,7 +51,7 @@ export default () => {
             />
           </Form.Item>
         </Form>
-        <Button type='primary' style={{ width: '230px', borderRadius: '6px', marginTop: '20px' }} onClick={ login }>登陆</Button>
+        <Button type='primary' style={{ width: '230px', borderRadius: '6px', marginTop: '20px' }} onClick={ login } loading={isLoading}>登陆</Button>
       </div>
     </div>
   )

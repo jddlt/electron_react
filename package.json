@@ -1,5 +1,5 @@
 {
-  "name": "react-demo",
+  "name": "app",
   "version": "0.1.0",
   "main": "main.js",
   "private": true,
@@ -11,7 +11,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "electron .",
-    "package": "electron-packager . ElectronMS --platform=win32 --arch=x64"
+    "package": "electron-packager . ElectronMS --win --ia32"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -36,8 +36,6 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "immer": "^6.0.5",
-    "immutable": "^4.0.0-rc.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",

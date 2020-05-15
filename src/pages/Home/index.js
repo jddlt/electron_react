@@ -30,16 +30,16 @@ export default () => {
         </div>
       </TabPane>
       <TabPane tab={ <span> <AndroidOutlined /> 未出售 </span> } key="2" >
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '30px', color: 'rgb(125, 238, 253);', lineHeight: '200px'}}>未出售</div>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '40px', color: 'rgb(125, 238, 253)', lineHeight: '200px'}}>未出售</div>
       </TabPane>
       <TabPane tab={ <span> <AndroidOutlined /> 已出售 </span> } key="3" >
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '30px', color: 'rgb(125, 238, 253);', lineHeight: '200px'}}>已出售</div>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '40px', color: 'rgb(125, 238, 253)', lineHeight: '200px'}}>已出售</div>
       </TabPane>
       <TabPane tab={ <span> <AndroidOutlined /> 未使用 </span> } key="4" >
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '30px', color: 'rgb(125, 238, 253);', lineHeight: '200px'}}>未使用</div>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '40px', color: 'rgb(125, 238, 253)', lineHeight: '200px'}}>未使用</div>
       </TabPane>
       <TabPane tab={ <span> <AndroidOutlined /> 已使用 </span> } key="5" >
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '30px', color: 'rgb(125, 238, 253);', lineHeight: '200px'}}>已使用</div>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '40px', color: 'rgb(125, 238, 253)', lineHeight: '200px'}}>已使用</div>
       </TabPane>
     </Tabs>
     <Drawer isShow={isShow} set={set}></Drawer>

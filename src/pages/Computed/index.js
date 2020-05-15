@@ -21,7 +21,7 @@ const { Option } = Select
 
 const columns = [
   {
-    title: '名称',
+    title: '墓地名称',
     dataIndex: 'name',
     key: 'name'
   },
@@ -63,9 +63,9 @@ const columns = [
     render: h => (
       <>
         { h === 0 && <Button type='link' style={{ color: 'green', padding: 0 }} onClick={() => message.success('售出成功')}>售出</Button> }
-        { h === 1 && <Button type='link' style={{ color: 'blue', padding: 0}} onClick={() => message.success('使用成功')}>使用</Button> }
+        { h === 1 && <Button type='link' style={{ color: 'blue', padding: 0}} onClick={() => message.info('使用成功')}>使用</Button> }
         { h !== 2 && <Divider type="vertical" /> }
-        <Button type='link' style={{ color: 'red', padding: 0}} onClick={() => message.success('删除成功')}>删除</Button>
+        <Button type='link' style={{ color: 'red', padding: 0}} onClick={() => message.error('删除成功')}>删除</Button>
       </>
     )
   }
@@ -144,7 +144,7 @@ export default () => {
       <Form style={{margin: '15px 0 20px 0', padding: '15px 0'}}>
         <Row gutter={24}>
           <Col span={6}>
-            <Form.Item label="状态">
+            <Form.Item label="墓地状态">
               <Select placeholder='请选择状态'>
                 <Option>未出售</Option>
                 <Option>已出售</Option>

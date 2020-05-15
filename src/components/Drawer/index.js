@@ -7,14 +7,14 @@ export default (props) => {
     <Drawer
       title=""
       placement="right"
-      width='420'
+      width='380'
       closable={true}
       onClose={() => { props.set && props.set(false) }}
       visible={props.isShow}
     >
       <Form style={{paddingLeft: '10px', paddingTop: '15px'}}>
-        <Form.Item label="名称">
-          <div>梅园一居</div>
+        <Form.Item label="墓地名称">
+          <div>东三区墓地</div>
         </Form.Item>
         <Form.Item label="地址">
           <div>上海市闵行区银都路3152弄梅园一居</div>
