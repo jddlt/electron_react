@@ -1,0 +1,26 @@
+.computed{
+    padding: 12px;
+    box-sizing: border-box;
+  }
+  
+  .box{
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    line-height: 200px;
+    background-color: rgb(0, 255, 170);
+    border: 1px solid rgb(46, 238, 8);
+    animation: rotate 2s linear infinite;
+    border-radius: 15px;
+    font-size: 24px;
+    color: #fff;
+    margin: 200px auto;
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0);
+    }
+    100%{
+      transform: rotate(360deg);
+    }
+  }

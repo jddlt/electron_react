@@ -18,7 +18,7 @@ export default () => {
       setTimeout(() => {
         setIsLoading(false)
         setIsLogin(true)
-      }, 1500)
+      }, 1200)
     } else {
       message.error('账号或密码不正确')
       return

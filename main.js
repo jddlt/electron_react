@@ -18,13 +18,13 @@ function createWindow () {
   // and load the index.html of the app.
   // mainWindow.loadFile('index.html')
   // if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, './build/index.html'),
-      protocol: 'file:',
-      slashes: true
-     }))
+    // mainWindow.loadURL(url.format({
+    //   pathname: path.join(__dirname, './build/index.html'),
+    //   protocol: 'file:',
+    //   slashes: true
+    //  }))
   // } else {
-    // mainWindow.loadURL('http://localhost:3000/');
+    mainWindow.loadURL('http://localhost:3000/');
   // }
    // 加载应用----适用于 react 开发时项目
   // Open the DevTools.
