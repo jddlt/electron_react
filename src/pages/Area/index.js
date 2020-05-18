@@ -9,7 +9,7 @@ import {
   Modal
 } from 'antd'
 import { Link } from 'react-router-dom'
-import request from './../../utils/request'
+import { request } from './../../utils/index'
 // import { exportExcel } from 'xlsx-oc'
 import './index.css';
 

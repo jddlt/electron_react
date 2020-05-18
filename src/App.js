@@ -8,7 +8,7 @@ import Area from './pages/Area'
 import { Button } from 'antd'
 import Login from './pages/Login'
 // import List from './pages/List'
-import './app.css'
+import './App.css'
 
 
 function App(props) {

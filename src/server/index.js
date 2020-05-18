@@ -41,12 +41,12 @@ app.post('/addArea', async(req, res) => {
 
 app.get('/areaList', async(req, res) => {
     var SQL = `SELECT * FROM area`;
-    db.query(SQL, (err, msg) => {
+    db.query(SQL, (err, data) => {
         if (err) {
             myError(res, err)
             return
         }
-        mySend(res, { msg: '获取成功', data: msg })
+        mySend(res, { msg: '获取成功', data })
         
     })
 })
@@ -68,14 +68,39 @@ app.get('/deleteArea', async(req, res) => {
 //     const SQL = 'SELECT * FROM mudi'
 //     db.query(SQL, (err, res) => console.log(res))
 // })
-// app.get('/addMudi', () => {
-//     const SQL = 'SELECT * FROM mudi'
-//     db.query(SQL, (err, res) => console.log(res))
-// })
-// app.get('/mudiList', () => {
-//     const SQL = 'SELECT * FROM mudi'
-//     db.query(SQL, (err, res) => console.log(res))
-// })
+app.post('/addMudi', async(req, res) => {
+    const params = await postParams(req)
+    const repeatSQL = `SELECT * FROM mudi WHERE (row,columns) = (${params.row},${params.columns})`
+    db.query(repeatSQL, (err, data) => {
+        if (err) {
+            myError(res, err)
+            return
+        }
+        if (data.length > 0) {
+            mySend(res, { msg: `${params.row}排${params.columns}列已存在墓穴，重复添加失败`, code: 1000 })
+        } else {
+            const SQL = `INSERT INTO mudi(${Object.keys(params).join(',')}) VALUES(${Object.values(params).map(item => String(item)).join(',')})`;
+            db.query(SQL, (err) => {
+                if (err) {
+                    myError(res, err)
+                    return
+                }
+                mySend(res, { msg: '添加成功' })
+            })
+        }
+    })
+})
+
+app.get('/mudiList', (req, res) => {
+    const SQL = 'SELECT * FROM mudi'
+    db.query(SQL, (err, data) => {
+        if (err) {
+            myError(res, err)
+            return
+        }
+        mySend(res, { msg: '获取成功', data })
+    })
+})
 
 db.connect((err) => {
     if(err) throw err

@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import { Tabs, Button, Card } from 'antd'
-import { Link } from "react-router-dom";
-import Drawer from './../../components/Drawer'
-import { AppleOutlined, AndroidOutlined, DingdingOutlined, IeOutlined, WeiboCircleOutlined, QqOutlined } from '@ant-design/icons';
+import { Card } from 'antd'
+// import { Link } from "react-router-dom";
+// import Drawer from './../../components/Drawer'
+// import { AppleOutlined, AndroidOutlined, DingdingOutlined, IeOutlined, WeiboCircleOutlined, QqOutlined } from '@ant-design/icons';
 
 import './index.css'
-const { TabPane } = Tabs
+// const { TabPane } = Tabs
 
-const operations = <>
-  <Link to='/computed'><Button type="primary">统计</Button></Link>
-  <Link to='/login'><Button style={{marginLeft: '6px'}}>退出登陆</Button></Link>
-</>
+// const operations = <>
+//   <Link to='/computed'><Button type="primary">统计</Button></Link>
+//   <Link to='/login'><Button style={{marginLeft: '6px'}}>退出登陆</Button></Link>
+// </>
 
 export default () => {
-  const [list, setIsShow] = useState([
-    {
-      // status: 
-    }
-  ])
-  const set = (flag) => {
-    setIsShow(flag)
-  }
+  // const [list, setIsShow] = useState([
+  //   {
+  //     // status: 
+  //   }
+  // ])
+  // const set = (flag) => {
+  //   setIsShow(flag)
+  // }
   return (
     <div className='home'>
       <Card title='东一区'>

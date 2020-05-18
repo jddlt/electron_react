@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Card,
   Row,
@@ -15,12 +15,9 @@ import {
 import { Link } from 'react-router-dom'
 // import { exportExcel } from 'xlsx-oc'
 import './index.css';
+import { request } from './../../utils/index';
 
 const { Option } = Select
-// const { Col } = Row
-
-
-
 
 
 export default () => {
@@ -57,65 +54,84 @@ export default () => {
     // //   '列表.xlsx'
     // // )
   }
+  useEffect(() => {getMudiList()}, [])
+
+  const getMudiList = async() => {
+    const res = await request('/mudiList', {})
+    console.log(res);
+    
+    setList(res.data.data)
+  }
+
   const columns = [
     {
       title: '序号',
       dataIndex: 'id',
       key: 'id',
-      fixed: 'left'
+      width: '100',
+      // fixed: 'left'
     },
     {
       title: '墓位编号',
       key: 'row',
       // fixed: 'left',
       render: (_, record) => (
-        <div>{record.row}排{record.column}号</div>
+        <div>{record.row}排{record.columns}号</div>
       )
     },
     {
       title: '死者姓名',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      render: h => h || '-'
     },
     {
       title: '性别',
       dataIndex: 'sex',
-      key: 'sex'
+      key: 'sex',
+      render: h => h || '-'
     },
     {
       title: '身份证',
       dataIndex: 'card',
-      key: 'card'
+      key: 'card',
+      render: h => h || '-'
     },
     {
       title: '村居',
       dataIndex: 'village',
-      key: 'village'
+      key: 'village',
+      render: h => h || '-'
     },
     {
       title: '死亡日期',
       dataIndex: 'diedDay',
-      key: 'diedDay'
+      key: 'diedDay',
+      render: h => h || '-'
     },
     {
       title: '购买者',
       dataIndex: 'buyPeople',
-      key: 'buyPeople'
+      key: 'buyPeople',
+      render: h => h || '-'
     },
     {
       title: '联系电话',
       dataIndex: 'phone',
-      key: 'phone'
+      key: 'phone',
+      render: h => h || '-'
     },
     {
       title: '地址',
       dataIndex: 'address',
-      key: 'address'
+      key: 'address',
+      render: h => h || '-'
     },
     {
       title: '购买日期',
       dataIndex: 'buyDay',
-      key: 'buyDay'
+      key: 'buyDay',
+      render: h => h || '-'
     },
     {
       title: '穴位类型',
@@ -126,40 +142,46 @@ export default () => {
     {
       title: '墓位基价',
       dataIndex: 'basePrice',
-      key: 'basePrice'
+      key: 'basePrice',
+      render: h => h || '-'
     },
     {
       title: '维护管理费',
       dataIndex: 'managePrice',
-      key: 'managePrice'
+      key: 'managePrice',
+      render: h => h || '-'
     },
     {
       title: '其它费用',
       dataIndex: 'otherPrice',
-      key: 'otherPrice'
+      key: 'otherPrice',
+      render: h => h || '-'
     },
     {
       title: '合计费用',
       dataIndex: 'totalPrice',
-      key: 'totalPrice'
+      key: 'totalPrice',
+      render: h => h || '-'
     },
     {
       title: '售墓经办人',
       dataIndex: 'manager',
-      key: 'manager'
+      key: 'manager',
+      render: h => h || '-'
     },
     {
       title: '所属区域',
       dataIndex: 'areaId',
       key: 'areaId',
       render: h => (
-        <div>{ areaList.find(item => item.id === h).area }</div>
+        <div>{ (areaList.find(item => item.id === h) || {}).area || '-' }</div>
       )
     },
     {
       title: '入葬日期',
       dataIndex: 'useDay',
-      key: 'useDay'
+      key: 'useDay',
+      render: h => h || '-'
     },
     {
       title: '墓穴当前销售状态',
