@@ -79,7 +79,7 @@ app.post('/addMudi', async(req, res) => {
         if (data.length > 0) {
             mySend(res, { msg: `${params.row}排${params.columns}列已存在墓穴，重复添加失败`, code: 1000 })
         } else {
-            const SQL = `INSERT INTO mudi(${Object.keys(params).join(',')}) VALUES(${Object.values(params).map(item => String(item)).join(',')})`;
+            const SQL = `INSERT INTO mudi(${Object.keys(params).join(',')}) VALUES(${Object.values(params).map(item => `"${item}"`).join(',')})`;
             db.query(SQL, (err) => {
                 if (err) {
                     myError(res, err)
@@ -92,7 +92,8 @@ app.post('/addMudi', async(req, res) => {
 })
 
 app.get('/mudiList', (req, res) => {
-    const SQL = 'SELECT * FROM mudi'
+    const { id } = req.query
+    const SQL = !id ? 'SELECT * FROM mudi' : `SELECT * FROM mudi WHERE areaId=${id}`
     db.query(SQL, (err, data) => {
         if (err) {
             myError(res, err)

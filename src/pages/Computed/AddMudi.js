@@ -28,8 +28,8 @@ export default () => {
     const extre = <Link to='/computed'><Button>返回</Button></Link>
 
     const handleSubmit = async () => {
-        // const val = await form.validateFields()
-        const val = await form.getFieldsValue()
+        const val = await form.validateFields()
+        // const val = await form.getFieldsValue()
         const res = await request('/addMudi', { 
             method: 'POST', 
             data:  filterNoUseParams({

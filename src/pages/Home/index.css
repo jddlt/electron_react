@@ -5,7 +5,7 @@
 
 .contain{
   width: 100%;
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,7 +55,8 @@
 .select{
   margin-top: 30px;
   width: 100%;
-  height: 900px;
+  /* height: 900px; */
+  padding-bottom: 100px;
   background-color: #e7e7e7;
   border-top: 1px solid #eee;
   display: flex;
@@ -83,11 +84,36 @@
 }
 
 .list-info{
-  width: 60%;
+  /* width: 1000px; */
+  position: relative;
+  margin: 0 auto;
+  /* height: 500px; */
+  /* overflow: hidden; */
+  margin-top: 80px;
+  /* border: 1px solid #000; */
+  /* padding: 12px; */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 60%;
   display: grid;
   margin-top: 10px;
   grid-template-columns: repeat(auto-fill, 26px);
   row-gap: 12px;
   column-gap: 12px;
-  justify-content: space-evenly;
+  justify-content: space-evenly; */
+}
+.list-item{
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  cursor: pointer;
+  transition: transform .2s;
+}
+.list-item:hover{
+  transform: scale(1.5);
 }

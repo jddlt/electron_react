@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Card } from 'antd'
-// import { Link } from "react-router-dom";
-// import Drawer from './../../components/Drawer'
+import React, { useState, useEffect } from 'react';
+import { Card, Select, Button } from 'antd'
+import { Link } from "react-router-dom";
+import { request } from './../../utils/index'
 // import { AppleOutlined, AndroidOutlined, DingdingOutlined, IeOutlined, WeiboCircleOutlined, QqOutlined } from '@ant-design/icons';
 
 import './index.css'
@@ -13,17 +13,57 @@ import './index.css'
 // </>
 
 export default () => {
-  // const [list, setIsShow] = useState([
-  //   {
-  //     // status: 
-  //   }
-  // ])
-  // const set = (flag) => {
-  //   setIsShow(flag)
-  // }
+  const [areaList, setAreaList] = useState([])
+  const [list, setList] = useState([])
+  const [box, setBox] = useState({})
+  const [info, setInfo] = useState({})
+  const { Option } = Select
+
+
+  const getAreaList = async() => {
+    const res = await request('/areaList', {})
+    setAreaList(res.data.data)
+    getMudiList(res.data.data[0].id)
+  }
+
+  const getMudiList = async(id) => {
+    const res = await request('/mudiList', { data: { id } })
+    setList(res.data.data)
+    let maxCol = 0
+    let maxRow = 0
+    for (let i = 0; i < res.data.data.length; i++) {
+      const item = res.data.data[i]
+      console.log(item.row, item.columns);
+      
+      if (Number(item.row) > maxRow) {maxRow = Number(item.row)}
+      if (Number(item.columns) > maxCol) {maxCol = Number(item.columns)}
+      console.log('111111',maxRow, maxCol);
+    }
+    setBox({ width: (maxRow * 58 + 12) + 'px', height: (maxCol * 52 + 12) + 'px' })
+  }
+
+
+  useEffect(() => {getAreaList()}, [])
+
+  const title = (
+    <Select placeholder={areaList[0] && areaList[0].area} bordered={false} onChange={e => getMudiList(e)}>
+      {
+        areaList.map(item => (
+          <Option value={item.id} key={item.id}>{ item.area }</Option>
+        ))
+      }
+    </Select>
+  )
+  const extre = (
+    <div>
+      <Link to='/area'><Button type="link">区域管理</Button></Link>
+      <Link to='/computed'><Button type="link">墓地管理</Button></Link>
+    </div>
+  )
+
   return (
     <div className='home'>
-      <Card title='东一区'>
+      <Card title={title} extra={extre}>
           <div className='contain'>
               <div className='type'>
                 <div className='type-item'><i className='iconfont i' style={{color: '#aaa'}}>&#xe63a;</i><span>未出售</span></div>
@@ -34,8 +74,16 @@ export default () => {
                 <div className='info'>
                   <div className='info-main'>东一区 &nbsp; 已出售: <span style={{color: 'green'}}> 12</span> &nbsp; 未出售: <span style={{color: 'red'}}> 12</span></div>
                 </div>
-                <div className='list-info'>
-                  
+                <div className='list-info' style={{...box}}>
+                  {
+                    list.map(item => (
+                      <div className='list-item' style={{left: (((item.row - 1 )* 58 + 12) + 'px'), top: (((item.columns - 1 )* 52 + 12) + 'px')}}>
+                        {
+                          <i className='iconfont i' style={{color: ['#aaa','red','green'][item.status]}}>&#xe63a;</i>
+                        }
+                      </div>
+                    ))
+                  }
                 </div>
               </div>
           </div> 

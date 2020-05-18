@@ -8,7 +8,7 @@ import Area from './pages/Area'
 import { Button } from 'antd'
 import Login from './pages/Login'
 // import List from './pages/List'
-import './App.css'
+import './app.css'
 
 
 function App(props) {
@@ -17,10 +17,7 @@ function App(props) {
   
   return <div className='app'>
     <HashRouter>
-      <div>
-        <Link to='/area'><Button type="link">区域管理</Button></Link>
-        <Link to='computed'><Button type="link">墓地管理</Button></Link>
-      </div>
+      
       <Switch>
         {/* <Route exact path="/list" component={List}/> */}
         {/* { where === 1 && <Redirect to='/area'></Redirect>}
