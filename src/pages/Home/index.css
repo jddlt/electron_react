@@ -117,3 +117,20 @@
 .list-item:hover{
   transform: scale(1.5);
 }
+.x{
+  height: 40px;
+  display: flex;
+  justify-content: space-evenly;
+  position: absolute;
+  left: 0;
+  bottom: -40px;
+}
+.y{
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: absolute;
+  left: -40px;
+  top: -0;
+}

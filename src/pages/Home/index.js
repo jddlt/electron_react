@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Select, Button } from 'antd'
+import { Card, Select, Button, Tooltip, Popconfirm } from 'antd'
+// import { SmileOutlined } from '@ant-design/icons'
 import { Link } from "react-router-dom";
 import { request } from './../../utils/index'
 // import { AppleOutlined, AndroidOutlined, DingdingOutlined, IeOutlined, WeiboCircleOutlined, QqOutlined } from '@ant-design/icons';
@@ -17,6 +18,7 @@ export default () => {
   const [list, setList] = useState([])
   const [box, setBox] = useState({})
   const [info, setInfo] = useState({})
+  // const [, setInfo] = useState({})
   const { Option } = Select
 
 
@@ -39,7 +41,12 @@ export default () => {
       if (Number(item.columns) > maxCol) {maxCol = Number(item.columns)}
       console.log('111111',maxRow, maxCol);
     }
-    setBox({ width: (maxRow * 58 + 12) + 'px', height: (maxCol * 52 + 12) + 'px' })
+    setBox({ width: (maxCol * 58 + 12) + 'px', height: (maxRow * 52 + 12) + 'px' })
+    setInfo({maxRow, maxCol})
+  }
+
+  const handleOk = () => {
+    
   }
 
 
@@ -77,13 +84,42 @@ export default () => {
                 <div className='list-info' style={{...box}}>
                   {
                     list.map(item => (
-                      <div className='list-item' style={{left: (((item.row - 1 )* 58 + 12) + 'px'), top: (((item.columns - 1 )* 52 + 12) + 'px')}}>
+                      <div className='list-item' style={{left: (((item.columns - 1 )* 58 + 12) + 'px'), bottom: (((item.row - 1 )* 52 + 12) + 'px')}}>
                         {
-                          <i className='iconfont i' style={{color: ['#aaa','red','green'][item.status]}}>&#xe63a;</i>
+                          <Popconfirm 
+                            title={
+                              !item.status
+                              ? '是否确认已出售?'
+                              : item.status == 1
+                                ? '是否确认已使用?'
+                                : '使用中, 查看信息?'
+                            }
+                            okText={item.status == 2 ? "查看" : "确定" }
+                            onConfirm={() => handleOk(item)}
+                            cancelText="取消"
+                          >
+                            <Tooltip placement="bottom" title={item.row + '排' + item.columns + '列'}>
+                              <i className='iconfont i' style={{color: ['#aaa','red','green'][item.status]}} onClick={() => {}}>&#xe63a;</i>
+                            </Tooltip>
+                          </Popconfirm>
                         }
                       </div>
                     ))
                   }
+                  <div className='x' style={{width: parseInt(box.width) < 476 ? 476 + 'px' : box.width}}>
+                    {
+                      (info.maxCol >= 8 ? new Array(info.maxCol).fill(null) : new Array(8).fill(null)).map((_, index) => {
+                        return <div style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ index + 1 }</div>
+                      })
+                    }
+                  </div>
+                  <div className='y' style={{height: parseInt(box.width) < 428 ? 428 + 'px' : box.height}}>
+                    {
+                      (info.maxRow >= 8 ?new Array(info.maxRow).fill(null) : new Array(8).fill(null)).map((_, index) => {
+                        return <div style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ (info.maxCol >= 8 ? info.maxCol : 8) - index + 1 }</div>
+                      })
+                    }
+                  </div>
                 </div>
               </div>
           </div> 
