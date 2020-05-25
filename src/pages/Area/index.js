@@ -9,6 +9,7 @@ import {
   Modal
 } from 'antd'
 import { Link } from 'react-router-dom'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { request } from './../../utils/index'
 // import { exportExcel } from 'xlsx-oc'
 import './index.css';
@@ -50,9 +51,23 @@ export default () => {
     }
 
     const deleteArea = async(id) => {
-      const res = await request('/deleteArea', { params: { id } })
-      message.success(res.data.msg)
-      getAreaList()
+      Modal.confirm({
+        title: '警告',
+        content: '是否确认删除改区域',
+        icon: <ExclamationCircleOutlined />,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: async() => {
+          const list = await request('/mudiList', { data: {id} })
+          if (list.data.data && list.data.data.length) {
+            message.error(`删除失败,该区域下拥有${list.data.data.length}块墓地`)
+          } else {
+            const res = await request('/deleteArea', { params: { id } })
+            message.success(res.data.msg)
+            getAreaList()
+          }
+        }
+      })
     }
 
     useEffect(() => {

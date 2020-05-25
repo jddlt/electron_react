@@ -42,6 +42,7 @@
     "body-parser": "^1.19.0",
     "electron": "^8.2.5",
     "electron-packager": "^14.2.1",
+    "js-export-excel": "^1.1.2",
     "moment": "^2.25.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Select, Button, Tooltip, Popconfirm } from 'antd'
+import { Card, Select, Button, Tooltip, Popconfirm, Modal, Form, Row, Col, Input, DatePicker, Radio, message } from 'antd'
 // import { SmileOutlined } from '@ant-design/icons'
-import { Link } from "react-router-dom";
-import { request } from './../../utils/index'
+import { Link, Redirect } from "react-router-dom";
+import { request, filterNoUseParams, Message } from './../../utils/index'
 // import { AppleOutlined, AndroidOutlined, DingdingOutlined, IeOutlined, WeiboCircleOutlined, QqOutlined } from '@ant-design/icons';
-
+import moment from 'moment'
 import './index.css'
 // const { TabPane } = Tabs
 
@@ -13,44 +13,79 @@ import './index.css'
 //   <Link to='/login'><Button style={{marginLeft: '6px'}}>退出登陆</Button></Link>
 // </>
 
+const { Group } = Radio
+
 export default () => {
   const [areaList, setAreaList] = useState([])
   const [list, setList] = useState([])
   const [box, setBox] = useState({})
   const [info, setInfo] = useState({})
-  // const [, setInfo] = useState({})
   const { Option } = Select
-
+  const [visible, setVisible] = useState(false)
+  const [goDetail, setGoDetail] = useState(false)
+  const [form] = Form.useForm()
+  const [current, setCurrent] = useState({})
+  const [areaId, setAreaId]= useState(null)
+  const [buyInfo, setBuyInfo] = useState({sell: 0, noSell: 0})
 
   const getAreaList = async() => {
     const res = await request('/areaList', {})
     setAreaList(res.data.data)
     getMudiList(res.data.data[0].id)
+    setAreaId(res.data.data[0].id)
   }
+
+
+  const [ useInfo ] = useState()
+
 
   const getMudiList = async(id) => {
     const res = await request('/mudiList', { data: { id } })
     setList(res.data.data)
+    setBuyInfo({
+      sell: res.data.data.filter(item => item.status != 0).length,
+      noSell: res.data.data.filter(item => item.status == 0).length
+    })
     let maxCol = 0
     let maxRow = 0
     for (let i = 0; i < res.data.data.length; i++) {
       const item = res.data.data[i]
-      console.log(item.row, item.columns);
-      
       if (Number(item.row) > maxRow) {maxRow = Number(item.row)}
       if (Number(item.columns) > maxCol) {maxCol = Number(item.columns)}
-      console.log('111111',maxRow, maxCol);
     }
     setBox({ width: (maxCol * 58 + 12) + 'px', height: (maxRow * 52 + 12) + 'px' })
-    setInfo({maxRow, maxCol})
+    setInfo({ maxRow, maxCol })
   }
 
-  const handleOk = () => {
+  const sureOk = async() => {
+    const val = await form.validateFields()
+    const res = await request('/updateMudi', { 
+      method: 'POST', 
+      data:  filterNoUseParams({
+        ...val,
+        status: current.status + 1,
+        diedDay: val.diedDay && moment(val.diedDay).format('YYYY-MSM-DD'),
+        buyDay: val.buyDay && moment(val.buyDay).format('YYYY-MM-DD HH:mm:ss'),
+        useDay: val.useDay && moment(val.useDay).format('YYYY-MM-DD')
+      }) ,
+      query: { id: current.id }
+    })
+    setVisible(false)
+    getMudiList(areaId)
+    Message(res)
+  }
+
+  const handleOk = (item) => {
+    setCurrent(item)
     
+    if(item.status != '2') {
+      setVisible(true)
+    } else {
+      setGoDetail(true)
+    }
   }
 
-
-  useEffect(() => {getAreaList()}, [])
+  useEffect(() => { getAreaList() }, [])
 
   const title = (
     <Select placeholder={areaList[0] && areaList[0].area} bordered={false} onChange={e => getMudiList(e)}>
@@ -70,6 +105,7 @@ export default () => {
 
   return (
     <div className='home'>
+      {current.status}
       <Card title={title} extra={extre}>
           <div className='contain'>
               <div className='type'>
@@ -79,12 +115,12 @@ export default () => {
               </div>
               <div className='select'>
                 <div className='info'>
-                  <div className='info-main'>东一区 &nbsp; 已出售: <span style={{color: 'green'}}> 12</span> &nbsp; 未出售: <span style={{color: 'red'}}> 12</span></div>
+                  <div className='info-main'>东一区 &nbsp; 已出售: <span style={{color: 'green'}}> {buyInfo.sell}</span> &nbsp; 未出售: <span style={{color: 'red'}}> {buyInfo.noSell}</span></div>
                 </div>
                 <div className='list-info' style={{...box}}>
                   {
                     list.map(item => (
-                      <div className='list-item' style={{left: (((item.columns - 1 )* 58 + 12) + 'px'), bottom: (((item.row - 1 )* 52 + 12) + 'px')}}>
+                      <div className='list-item' key={item.id} style={{left: (((item.columns - 1 )* 58 + 12) + 'px'), bottom: (((item.row - 1 )* 52 + 12) + 'px')}}>
                         {
                           <Popconfirm 
                             title={
@@ -106,17 +142,17 @@ export default () => {
                       </div>
                     ))
                   }
-                  <div className='x' style={{width: parseInt(box.width) < 476 ? 476 + 'px' : box.width}}>
+                  <div className='x' style={{width: box.width}}>
                     {
-                      (info.maxCol >= 8 ? new Array(info.maxCol).fill(null) : new Array(8).fill(null)).map((_, index) => {
-                        return <div style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ index + 1 }</div>
+                      new Array(info.maxCol).fill(null).map((_, index) => {
+                        return <div key={index} style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ index + 1 }</div>
                       })
                     }
                   </div>
-                  <div className='y' style={{height: parseInt(box.width) < 428 ? 428 + 'px' : box.height}}>
+                  <div className='y' style={{height: box.height}}>
                     {
-                      (info.maxRow >= 8 ?new Array(info.maxRow).fill(null) : new Array(8).fill(null)).map((_, index) => {
-                        return <div style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ (info.maxCol >= 8 ? info.maxCol : 8) - index + 1 }</div>
+                      new Array(info.maxRow).fill(null).map((_, index) => {
+                        return <div key={index} style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ info.maxRow - index }</div>
                       })
                     }
                   </div>
@@ -124,8 +160,77 @@ export default () => {
               </div>
           </div> 
       </Card>
+      <Modal
+        title={current.status == 0 ? '编辑为已出售' : '编辑为已使用'}
+        visible={visible}
+        // width={600}
+        maskClosable={false}
+        cancelText='取消'
+        onOk={sureOk}
+        // confirmLoading={confirmLoading}
+        onCancel={() => setVisible(false)}
+      >
+        <Form form={form} labelCol={{ span: 7 }} wrapperCol={{ span: 17 }}>
+                <Form.Item label='所在区域'>
+                  { (areaList.find(item => item.id === current.areaId) || {}).area }
+                </Form.Item>
+                <Form.Item label='墓地位置'>
+                  { current.row + '排' + current.columns + '列'}
+                </Form.Item>
+                <Form.Item label='墓地类型'>
+                  { current.type === '0' ? '单' : '双' }
+                </Form.Item>
+                <Form.Item label='墓地价格'>
+                  { current.basePrice + '元' }
+                </Form.Item>
+            {
+              current.status == '0'
+              ? <>
+                        <Form.Item label="购买者" rules={[{ required: true, message: '购买者不能为空' }]} name="buyer">
+                          <Input placeholder='请输入购买者'></Input>
+                      </Form.Item>
+                      <Form.Item label="联系电话" rules={[{ required: true, message: '联系电话不能为空' }]} name="phone">
+                          <Input placeholder='请输入联系电话'></Input>
+                      </Form.Item>
+                      <Form.Item label="地址" rules={[{ required: true, message: '地址不能为空' }]} name="address">
+                          <Input placeholder='请输入地址'></Input>
+                      </Form.Item>
+                    <Form.Item label="购买日期" rules={[{ required: true, message: '购买日期不能为空' }]} name="buyDay">
+                                  <DatePicker placeholder='请输入购买日期' showTime style={{width: '100%'}}></DatePicker>
+                              </Form.Item>
+                    <Form.Item label="销售经办人" rules={[{ required: true, message: '销售经办人不能为空' }]} name="manager">
+                                  <Input placeholder='请输入销售经办人'></Input>
+                              </Form.Item>
+                </>
+              : <>
+                <Form.Item label="死者姓名" rules={[{ required: true, message: '死者姓名不能为空' }]} name="name">
+                            <Input placeholder='请输入死者姓名'></Input>
+                        </Form.Item>
+                <Form.Item label="性别" rules={[{ required: true, message: '性别不能为空' }]} name="sex">
+                            <Group initialValue="0">
+                                <Radio value='1'>男</Radio>
+                                <Radio value='0'>女</Radio>
+                            </Group>
+                            {/* <Input placeholder='请输入性别'></Input> */}
+                        </Form.Item>
+                <Form.Item label="身份证" rules={[{ required: true, message: '身份证不能为空' }]} name="card">
+                            <Input placeholder='请输入身份证'></Input>
+                        </Form.Item>
+                <Form.Item label="村居" rules={[{ required: true, message: '村居不能为空' }]} name="village">
+                            <Input placeholder='请输入村居'></Input>
+                        </Form.Item>
+                <Form.Item label="死亡日期" rules={[{ required: true, message: '死完日期不能为空' }]} name="diedDay">
+                            <DatePicker placeholder='请输入死完日期' style={{width: '100%'}}></DatePicker>
+                        </Form.Item>
+                <Form.Item label="使用日期" rules={[{ required: true, message: '使用日期不能为空' }]} name="useDay">
+                            <DatePicker placeholder='请输入使用日期' style={{width: '100%'}}></DatePicker>
+                        </Form.Item>
+            </>
+            }
+        </Form>
+      </Modal>
       {/* <i className='iconfont'>&#xe63a;</i> */}
-    
+      { goDetail && <Redirect to={`/addMudi?id=${current.id}`} /> }
     </div>
   )
 }

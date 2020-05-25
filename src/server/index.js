@@ -91,32 +91,58 @@ app.post('/addMudi', async(req, res) => {
     })
 })
 
-app.post('/uploadMudi', async(req, res) => {
+
+app.post('/updateMudi', async(req, res) => {
     const params = await postParams(req)
-    const repeatSQL = `SELECT * FROM mudi WHERE (row,columns,areaId) = (${params.row},${params.columns},${params.areaId})`
+    const { id } = req.query
+    const repeatSQL = `SELECT * FROM mudi WHERE (row,columns,areaId) = (${params.row},${params.columns},${params.areaId}) AND id != ${id}`
     db.query(repeatSQL, (err, data) => {
         if (err) {
             myError(res, err)
             return
         }
         if (data.length > 0) {
-            mySend(res, { msg: `${params.row}排${params.columns}列已存在墓穴，重复添加失败`, code: 1000 })
+            mySend(res, { msg: `${params.row}排${params.columns}列已存在墓穴，编辑失败`, code: 1000 })
         } else {
-            const SQL = `INSERT INTO mudi(${Object.keys(params).join(',')}) VALUES(${Object.values(params).map(item => `"${item}"`).join(',')})`;
-            db.query(SQL, (err) => {
+            const SQL = `UPDATE mudi set ${ Object.keys(params).map(key => `${key}="${params[key]}"`).join(',') } WHERE id = ${id}`
+            db.query(SQL, (err, data) => {
                 if (err) {
                     myError(res, err)
                     return
                 }
-                mySend(res, { msg: '添加成功' })
+                mySend(res, { msg: '修改成功' })
             })
         }
+    })
+})
+
+app.get('/detailById', async(req, res) => {
+    const { id } = req.query
+    const SQL = `SELECT * FROM mudi WHERE id=${id}`
+    db.query(SQL, (err, data) => {
+        if (err) {
+            myError(res, err)
+            return
+        }
+        mySend(res, { msg: '修改成功', data })
     })
 })
 
 app.get('/mudiList', (req, res) => {
     const { id } = req.query
     const SQL = !id ? 'SELECT * FROM mudi' : `SELECT * FROM mudi WHERE areaId=${id}`
+    db.query(SQL, (err, data) => {
+        if (err) {
+            myError(res, err)
+            return
+        }
+        mySend(res, { msg: '获取成功', data })
+    })
+})
+
+app.post('/searchMudiList', async(req, res) => {
+    const params = await postParams(req)
+    const SQL = Object.keys(params).length ? `SELECT * FROM mudi WHERE (${Object.keys(params).join(',')}) = (${Object.values(params).map(item => `"${item}"`).join(',')})` : 'SELECT * FROM mudi'
     db.query(SQL, (err, data) => {
         if (err) {
             myError(res, err)

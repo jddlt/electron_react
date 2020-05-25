@@ -13,9 +13,10 @@ import {
   Divider,
 } from 'antd'
 import { Link } from 'react-router-dom'
+import ExportJsonExcel from 'js-export-excel'
 // import { exportExcel } from 'xlsx-oc'
 import './index.css';
-import { request } from './../../utils/index';
+import { request, toExcel } from './../../utils/index';
 
 const { Option } = Select
 
@@ -23,57 +24,76 @@ const { Option } = Select
 export default () => {
   const [list, setList] = useState([])
   const [areaList, setAreaList] = useState([])
+  const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
 
   const downloadExcel = () => {
-    // //列标题，逗号隔开，每一个逗号就是隔开一个单元格
-    // let str = `名称,地址,出售日期,家属电话,所属区域,状态\n`;
-    // //增加\t为了不让表格显示科学计数法或者其他格式
-    // for(let i = 0 ; i < dataSource.length ; i++ ){
-    //   for(let item in dataSource[i]){
-    //     if (item === 'status') {
-    //       str+=`${['未出售', '未使用', '使用中'][(dataSource[i][item])] + '\t'},`;   
-    //     } else {
-    //       str+=`${dataSource[i][item] + '\t'},`;     
-    //     }
-    //   }
-    //   str+='\n';
-    // }
-    // //encodeURIComponent解决中文乱码
-    // let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
-    // //通过创建a标签实现
-    // var link = document.createElement("a");
-    // link.href = uri;
-    // //对下载的文件命名
-    // link.download = "墓地列表.xlsx";
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-    // // exportExcel(
-    // //   columns.slice(0, 5).map(item => ({ k: item.dataIndex, v: item.title })),
-    // //   dataSource,
-    // //   '列表.xlsx'
-    // // )
+    const option={}
+    let dataTable = list.map(val => {
+      let obj = {}
+      for (let i = 0; i < columns.length - 1; i++) {
+        const item = columns[i]
+        if (item.title === '墓位编号') {
+          console.log(11111111111);
+          
+          obj[item.title] = val.row + '排' + val.columns + '号'
+        } else if (item.title === '穴位类型') {
+          obj[item.title] = val.type ? '双' : '单'
+        } else if (item.title === '所属区域') {
+          obj[item.title] = (areaList.find(item2 => item2.id === val.areaId) || {}).area || '-'
+        } else if (item.title === '墓穴当前销售状态') {
+          obj[item.title] = val.status == 0 ? '未出售' : val.status == 1 ? '已出售未入葬' : '已销售已入葬'
+        } else if (item.title === '性别') {
+          obj[item.title] = val.sex ? '女' : '男'
+        } else {
+          obj[item.title] = val[item.dataIndex]
+        }
+      }
+      return obj
+    })
+
+    option.fileName = '墓地列表'
+    option.datas=[
+      {
+        sheetData: dataTable,
+        sheetName:'sheet',
+        sheetFilter: columns.slice(0, -1).map(item => item.title),
+        sheetHeader: columns.slice(0, -1).map(item => item.title),
+      }
+    ];
+
+    var toExcel = new ExportJsonExcel(option); 
+    toExcel.saveExcel()
   }
   useEffect(() => {getMudiList()}, [])
 
   const getMudiList = async() => {
+    setLoading(true)
     const res = await request('/mudiList', {})
-    console.log(res);
-    
     setList(res.data.data)
+    setLoading(false)
   }
+
+  const getAreaList = async() => {
+    const res = await request('/areaList', {})
+    setAreaList(res.data.data)
+  }
+
+  useEffect(() => { getAreaList() }, [])
+
 
   const columns = [
     {
       title: '序号',
       dataIndex: 'id',
       key: 'id',
-      width: '100',
-      // fixed: 'left'
+      width: 100,
+      fixed: 'left'
     },
     {
       title: '墓位编号',
       key: 'row',
+      width: 100,
       // fixed: 'left',
       render: (_, record) => (
         <div>{record.row}排{record.columns}号</div>
@@ -83,95 +103,111 @@ export default () => {
       title: '死者姓名',
       dataIndex: 'name',
       key: 'name',
+      width: 100,
       render: h => h || '-'
     },
     {
       title: '性别',
       dataIndex: 'sex',
       key: 'sex',
+      width: 100,
       render: h => h || '-'
     },
     {
       title: '身份证',
       dataIndex: 'card',
       key: 'card',
+      width: 200,
       render: h => h || '-'
     },
     {
       title: '村居',
       dataIndex: 'village',
       key: 'village',
+      width: 200,
       render: h => h || '-'
     },
     {
       title: '死亡日期',
       dataIndex: 'diedDay',
       key: 'diedDay',
+      width: 200,
       render: h => h || '-'
     },
     {
       title: '购买者',
       dataIndex: 'buyPeople',
       key: 'buyPeople',
+      width: 100,
       render: h => h || '-'
     },
     {
       title: '联系电话',
       dataIndex: 'phone',
+      width: 150,
       key: 'phone',
       render: h => h || '-'
     },
     {
       title: '地址',
       dataIndex: 'address',
+      width: 250,
       key: 'address',
       render: h => h || '-'
     },
     {
       title: '购买日期',
       dataIndex: 'buyDay',
+      width: 200,
       key: 'buyDay',
       render: h => h || '-'
     },
     {
       title: '穴位类型',
       dataIndex: 'type',
+      width: 100,
       key: '穴位类型',
       render: h => (<div>{ h ? '双' : '单'}</div>)
     },
     {
       title: '墓位基价',
       dataIndex: 'basePrice',
+      width: 100,
       key: 'basePrice',
       render: h => h || '-'
     },
     {
       title: '维护管理费',
       dataIndex: 'managePrice',
+      width: 120,
       key: 'managePrice',
       render: h => h || '-'
     },
     {
       title: '其它费用',
       dataIndex: 'otherPrice',
+      width: 100,
       key: 'otherPrice',
       render: h => h || '-'
     },
     {
       title: '合计费用',
       dataIndex: 'totalPrice',
+      width: 100,
       key: 'totalPrice',
       render: h => h || '-'
     },
     {
       title: '售墓经办人',
       dataIndex: 'manager',
+      width: 120,
       key: 'manager',
       render: h => h || '-'
     },
     {
       title: '所属区域',
       dataIndex: 'areaId',
+      width: 100,
       key: 'areaId',
       render: h => (
         <div>{ (areaList.find(item => item.id === h) || {}).area || '-' }</div>
@@ -180,14 +216,16 @@ export default () => {
     {
       title: '入葬日期',
       dataIndex: 'useDay',
+      width: 200,
       key: 'useDay',
       render: h => h || '-'
     },
     {
       title: '墓穴当前销售状态',
       dataIndex: 'status',
+      width: 150,
       key: 'status',
-      // fixed: 'right',
+      fixed: 'right',
       render: h => (
         [
           <Tag>未出售</Tag>,
@@ -199,13 +237,14 @@ export default () => {
     {
       title: '操作',
       dataIndex: 'status',
-      // fixed: 'right',
-      render: h => (
+      width: 100,
+      fixed: 'right',
+      render: (_, r) => (
         <>
           {/* { h === 0 && <Button type='link' style={{ color: 'green', padding: 0 }} onClick={() => message.success('售出成功')}>售出</Button> }
           { h === 1 && <Button type='link' style={{ color: 'blue', padding: 0}} onClick={() => message.info('使用成功')}>使用</Button> }
           { h !== 2 && <Divider type="vertical" /> } */}
-          <a href="javascript:;" onClick={() => {}}>编辑</a>
+          <Link to={`/addMudi?id=${r.id}`}><Button type='primary'>编辑</Button></Link>
         </>
       )
     }
@@ -218,37 +257,45 @@ export default () => {
     </>
   )
 
+  const handleSubmit = async() => {
+    setLoading(true)
+    const val = await form.getFieldsValue()
+    const res = await request('/searchMudiList', { method: 'POST', data: {...val} })
+    setList(res.data.data)
+    setLoading(false)
+  }
+
   return (
     <Card className='computed' title="列表统计" bordered={false} extra={ extre }>
-      <Form style={{margin: '15px 0 20px 0', padding: '15px 0'}}>
+      <Form style={{margin: '15px 0 20px 0', padding: '15px 0'}} form={form}>
         <Row gutter={24}>
           <Col span={6}>
-            <Form.Item label="墓地状态">
-              <Select placeholder='请选择状态'>
-                <Option>未出售</Option>
-                <Option>已出售</Option>
-                <Option>未使用</Option>
-                <Option>使用中</Option>
+            <Form.Item label="墓地状态" name='status'>
+              <Select placeholder='请选择状态' allowClear>
+                <Option value='0'>未出售</Option>
+                <Option value='1'>已出售未使用</Option>
+                <Option value='2'>已出售已使用</Option>
               </Select>
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item label="区域管理">
-              <Select placeholder="请选择区域">
-                <Option>区一</Option>
-                <Option>区二</Option>
-                <Option>区三</Option>
-                <Option>区四</Option>
+            <Form.Item label="区域管理" name='areaId'>
+              <Select placeholder="请选择区域" allowClear>
+                {
+                  areaList.map(item => (
+                    <Option value={item.id} key={item.id}>{ item.area }</Option>
+                  ))
+                }
               </Select>
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item label="家属电话">
-              <Input placeholder='请输入电话'></Input>
+            <Form.Item label="死者姓名" name='name'>
+              <Input placeholder='请输入死者姓名'></Input>
             </Form.Item>
           </Col>
           <Col span={6} style={{textAlign: 'right'}}>
-            <Button type="primary" onClick={() => message.info('查不到啊')}>查询</Button>
+            <Button type="primary" onClick={handleSubmit}>查询</Button>
             <Button type="info" style={{ marginLeft: '16px' }} onClick={ downloadExcel }>导出Excel</Button>
           </Col>
         </Row>
@@ -256,7 +303,10 @@ export default () => {
         </Row> */}
       </Form>
 
-      <Table columns={columns} dataSource={list} scroll={{x: 'max-content'}} bordered/>
+      <Table columns={columns} loading={loading} dataSource={list} scroll={{x: '2850px'}} bordered rowKey="id" pagination={{
+        showTotal: h => `共计${h}条`,
+        total: list.length
+      }}/>
       {/* <Link to='/home'><Button type='info' style={{position: 'relative', top: '-48px'}}>返回</Button></Link> */}
     </Card>
   )

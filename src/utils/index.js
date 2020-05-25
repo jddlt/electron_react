@@ -1,6 +1,6 @@
 import { message } from 'antd'
 import Request from './request'
-
+// import toExcel from './toExcel'
 
 export function Message(res) {
   if (res.data.code === 200) {
@@ -13,6 +13,10 @@ export function Message(res) {
 export function request(url, { method, data = {}, ...rest}) {
   return Request(url, { method, data, ...rest})
 }
+
+// export function toExcel({th, data, fileName, fileType, sheetName}) {
+//   return toExcel({th, data, fileName, fileType, sheetName})
+// }
 
 export function filterNoUseParams(params) {
   for (let key in params) {
