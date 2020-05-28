@@ -8,7 +8,8 @@ import Area from './pages/Area'
 import { Button } from 'antd'
 import Login from './pages/Login'
 // import List from './pages/List'
-import './app.css'
+import './App.css'
+import { PrinterFilled } from '@ant-design/icons';
 
 
 function App(props) {

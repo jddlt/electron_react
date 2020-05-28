@@ -297,6 +297,7 @@ export default () => {
           <Col span={6} style={{textAlign: 'right'}}>
             <Button type="primary" onClick={handleSubmit}>查询</Button>
             <Button type="info" style={{ marginLeft: '16px' }} onClick={ downloadExcel }>导出Excel</Button>
+            <Button type="info" style={{ marginLeft: '16px' }} onClick={ downloadExcel }>导入Excel</Button>
           </Col>
         </Row>
         {/* <Row gutter={24}>
