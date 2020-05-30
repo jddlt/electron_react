@@ -35,9 +35,15 @@ export default () => {
     setAreaId(res.data.data[0].id)
   }
 
-
   const [ useInfo ] = useState()
+  const [ print, setPrint ] = useState(false)
 
+  useEffect(() => {
+    if (print) {
+      window.print()
+      setPrint(false)
+    }
+  }, [print])
 
   const getMudiList = async(id) => {
     const res = await request('/mudiList', { data: { id } })
@@ -60,14 +66,14 @@ export default () => {
   const sureOk = async() => {
     const val = await form.validateFields()
     const res = await request('/updateMudi', { 
-      method: 'POST', 
+      method: 'POST',
       data:  filterNoUseParams({
         ...val,
         status: current.status + 1,
         diedDay: val.diedDay && moment(val.diedDay).format('YYYY-MSM-DD'),
         buyDay: val.buyDay && moment(val.buyDay).format('YYYY-MM-DD HH:mm:ss'),
         useDay: val.useDay && moment(val.useDay).format('YYYY-MM-DD')
-      }) ,
+      }),
       query: { id: current.id }
     })
     setVisible(false)
@@ -98,6 +104,7 @@ export default () => {
   )
   const extre = (
     <div>
+      <Button type="link" onClick={() => setPrint(true)}>打印</Button>
       <Link to='/area'><Button type="link">区域管理</Button></Link>
       <Link to='/computed'><Button type="link">墓地管理</Button></Link>
     </div>
@@ -105,8 +112,9 @@ export default () => {
 
   return (
     <div className='home'>
-      {current.status}
-      <Card title={title} extra={extre}>
+      {
+        print
+        ? <>
           <div className='contain'>
               <div className='type'>
                 <div className='type-item'><i className='iconfont i' style={{color: '#aaa'}}>&#xe63a;</i><span>未出售</span></div>
@@ -158,8 +166,63 @@ export default () => {
                   </div>
                 </div>
               </div>
-          </div> 
-      </Card>
+          </div>
+        </>
+        : <Card title={title} extra={extre}>
+            <div className='contain'>
+                <div className='type'>
+                  <div className='type-item'><i className='iconfont i' style={{color: '#aaa'}}>&#xe63a;</i><span>未出售</span></div>
+                  <div className='type-item' style={{margin: '0 18px 0 30px'}}><i className='iconfont i' style={{color: 'red'}}>&#xe63a;</i><span>已出售未使用</span></div>
+                  <div className='type-item'><i className='iconfont i' style={{color: 'green'}}>&#xe63a;</i><span>已出售已使用</span></div>
+                </div>
+                <div className='select'>
+                  <div className='info'>
+                    <div className='info-main'>东一区 &nbsp; 已出售: <span style={{color: 'green'}}> {buyInfo.sell}</span> &nbsp; 未出售: <span style={{color: 'red'}}> {buyInfo.noSell}</span></div>
+                  </div>
+                  <div className='list-info' style={{...box}}>
+                    {
+                      list.map(item => (
+                        <div className='list-item' key={item.id} style={{left: (((item.columns - 1 )* 58 + 12) + 'px'), bottom: (((item.row - 1 )* 52 + 12) + 'px')}}>
+                          {
+                            <Popconfirm 
+                              title={
+                                !item.status
+                                ? '是否确认已出售?'
+                                : item.status == 1
+                                  ? '是否确认已使用?'
+                                  : '使用中, 查看信息?'
+                              }
+                              okText={item.status == 2 ? "查看" : "确定" }
+                              onConfirm={() => handleOk(item)}
+                              cancelText="取消"
+                            >
+                              <Tooltip placement="bottom" title={item.row + '排' + item.columns + '列'}>
+                                <i className='iconfont i' style={{color: ['#aaa','red','green'][item.status]}} onClick={() => {}}>&#xe63a;</i>
+                              </Tooltip>
+                            </Popconfirm>
+                          }
+                        </div>
+                      ))
+                    }
+                    <div className='x' style={{width: box.width}}>
+                      {
+                        new Array(info.maxCol).fill(null).map((_, index) => {
+                          return <div key={index} style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ index + 1 }</div>
+                        })
+                      }
+                    </div>
+                    <div className='y' style={{height: box.height}}>
+                      {
+                        new Array(info.maxRow).fill(null).map((_, index) => {
+                          return <div key={index} style={{fontWeight: 'bold', fontSize: '20px', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px'}}>{ info.maxRow - index }</div>
+                        })
+                      }
+                    </div>
+                  </div>
+                </div>
+            </div> 
+        </Card>
+      }
       <Modal
         title={current.status == 0 ? '编辑为已出售' : '编辑为已使用'}
         visible={visible}

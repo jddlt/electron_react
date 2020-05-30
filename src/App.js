@@ -28,7 +28,7 @@ function App(props) {
         <Route exact path="/area" component={Area}/>
         <Route exact path="/addMudi" component={AddMudi}/>
         <Route exact path="/computed" component={Computed}></Route>
-        <Redirect exact from='/' to='/login'></Redirect>
+        <Redirect exact from='/' to='/home'></Redirect>
       </Switch>
     </HashRouter>
   </div>

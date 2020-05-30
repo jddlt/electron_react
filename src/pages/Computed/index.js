@@ -34,8 +34,6 @@ export default () => {
       for (let i = 0; i < columns.length - 1; i++) {
         const item = columns[i]
         if (item.title === '墓位编号') {
-          console.log(11111111111);
-          
           obj[item.title] = val.row + '排' + val.columns + '号'
         } else if (item.title === '穴位类型') {
           obj[item.title] = val.type ? '双' : '单'
@@ -51,7 +49,6 @@ export default () => {
       }
       return obj
     })
-
     option.fileName = '墓地列表'
     option.datas=[
       {
@@ -61,10 +58,21 @@ export default () => {
         sheetHeader: columns.slice(0, -1).map(item => item.title),
       }
     ];
-
     var toExcel = new ExportJsonExcel(option); 
     toExcel.saveExcel()
   }
+
+  const preview = () => {
+    const bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+    const sprnstr="/* startprint */";//设置打印开始区域
+    const eprnstr="<!--endprint-->";//设置打印结束区域
+    let prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+    prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+    window.document.body.innerHTML=prnhtml;
+    window.print();
+    window.document.body.innerHTML=bdhtml;
+  }
+
   useEffect(() => {getMudiList()}, [])
 
   const getMudiList = async() => {
@@ -298,16 +306,18 @@ export default () => {
             <Button type="primary" onClick={handleSubmit}>查询</Button>
             <Button type="info" style={{ marginLeft: '16px' }} onClick={ downloadExcel }>导出Excel</Button>
             <Button type="info" style={{ marginLeft: '16px' }} onClick={ downloadExcel }>导入Excel</Button>
+            <Button type="info" style={{ marginLeft: '16px' }} onClick={ preview }>打印</Button>
           </Col>
         </Row>
         {/* <Row gutter={24}>
         </Row> */}
       </Form>
-
+      {/* startprint */}
       <Table columns={columns} loading={loading} dataSource={list} scroll={{x: '2850px'}} bordered rowKey="id" pagination={{
         showTotal: h => `共计${h}条`,
         total: list.length
       }}/>
+      {/* endprint */}
       {/* <Link to='/home'><Button type='info' style={{position: 'relative', top: '-48px'}}>返回</Button></Link> */}
     </Card>
   )
