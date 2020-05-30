@@ -27,7 +27,7 @@ export default function() {
     const [areaList, setAreaList] = useState([])
     const [Default, setDefault] = useState({})
     const [hasId, setHasId] = useState(0)
-    const extre = <Link to='/home'><Button>返回</Button></Link>
+    const extre = <Link to='/computed'><Button>返回</Button></Link>
     const [form] = Form.useForm()
     const history = useHistory()
 

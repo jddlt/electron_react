@@ -45,8 +45,10 @@ export default () => {
     }
   }, [print])
 
-  const getMudiList = async(id) => {
+  const getMudiList =  async(id) => {
+    setAreaId(id)
     const res = await request('/mudiList', { data: { id } })
+    console.log(id)
     setList(res.data.data)
     setBuyInfo({
       sell: res.data.data.filter(item => item.status != 0).length,
@@ -65,7 +67,7 @@ export default () => {
 
   const sureOk = async() => {
     const val = await form.validateFields()
-    const res = await request('/updateMudi', { 
+    const res = await request('/updateMudi', {
       method: 'POST',
       data:  filterNoUseParams({
         ...val,
@@ -123,7 +125,7 @@ export default () => {
               </div>
               <div className='select'>
                 <div className='info'>
-                  <div className='info-main'>东一区 &nbsp; 已出售: <span style={{color: 'green'}}> {buyInfo.sell}</span> &nbsp; 未出售: <span style={{color: 'red'}}> {buyInfo.noSell}</span></div>
+                  <div className='info-main'>{ (areaList.find(item => item.id === areaId) || {}).area } &nbsp; 已出售: <span style={{color: 'green'}}> {buyInfo.sell}</span> &nbsp; 未出售: <span style={{color: 'red'}}> {buyInfo.noSell}</span></div>
                 </div>
                 <div className='list-info' style={{...box}}>
                   {
@@ -142,7 +144,7 @@ export default () => {
                             onConfirm={() => handleOk(item)}
                             cancelText="取消"
                           >
-                            <Tooltip placement="bottom" title={item.row + '排' + item.columns + '列'}>
+                            <Tooltip placement="bottom" title={item.row + '排' + item.columns + '列11' }>
                               <i className='iconfont i' style={{color: ['#aaa','red','green'][item.status]}} onClick={() => {}}>&#xe63a;</i>
                             </Tooltip>
                           </Popconfirm>
@@ -177,7 +179,7 @@ export default () => {
                 </div>
                 <div className='select'>
                   <div className='info'>
-                    <div className='info-main'>东一区 &nbsp; 已出售: <span style={{color: 'green'}}> {buyInfo.sell}</span> &nbsp; 未出售: <span style={{color: 'red'}}> {buyInfo.noSell}</span></div>
+                    <div className='info-main'>{ (areaList.find(item => item.id === areaId) || {}).area } &nbsp; 已出售: <span style={{color: 'green'}}> {buyInfo.sell}</span> &nbsp; 未出售: <span style={{color: 'red'}}> {buyInfo.noSell}</span></div>
                   </div>
                   <div className='list-info' style={{...box}}>
                     {

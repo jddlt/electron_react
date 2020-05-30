@@ -8,7 +8,7 @@ import Area from './pages/Area'
 import { Button } from 'antd'
 import Login from './pages/Login'
 // import List from './pages/List'
-import './App.css'
+import './app.css'
 import { PrinterFilled } from '@ant-design/icons';
 
 
@@ -28,7 +28,7 @@ function App(props) {
         <Route exact path="/area" component={Area}/>
         <Route exact path="/addMudi" component={AddMudi}/>
         <Route exact path="/computed" component={Computed}></Route>
-        <Redirect exact from='/' to='/home'></Redirect>
+        <Redirect exact from='/' to='/login'></Redirect>
       </Switch>
     </HashRouter>
   </div>

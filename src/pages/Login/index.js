@@ -28,7 +28,7 @@ export default () => {
   return (
     <div className='login'>
       { isLogin && <Redirect to="/home" /> }
-      <div className='title'>公墓管理</div>
+      <div className='title'>弋阳县公墓管理</div>
       <div className='modle'>
         <Form>
           <Form.Item>

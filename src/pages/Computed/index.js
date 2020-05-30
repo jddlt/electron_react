@@ -11,12 +11,14 @@ import {
   Tag,
   Table,
   Divider,
+  Upload,
 } from 'antd'
 import { Link } from 'react-router-dom'
 import ExportJsonExcel from 'js-export-excel'
+import ReactEcharts from './Echarts'
 // import { exportExcel } from 'xlsx-oc'
 import './index.css';
-import { request, toExcel } from './../../utils/index';
+import { request, filterNoUseParams } from './../../utils/index';
 
 const { Option } = Select
 
@@ -26,10 +28,14 @@ export default () => {
   const [areaList, setAreaList] = useState([])
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
+  const [current, setCurrent] = useState(1)
+  const [showEcharts, setShowEcharts] = useState(false)
 
-  const downloadExcel = () => {
+  const downloadExcel = (myList = false, name) => {
     const option={}
-    let dataTable = list.map(val => {
+    const mylist = myList || list
+    console.log(mylist)
+    let dataTable = mylist.map(val => {
       let obj = {}
       for (let i = 0; i < columns.length - 1; i++) {
         const item = columns[i]
@@ -49,13 +55,14 @@ export default () => {
       }
       return obj
     })
-    option.fileName = '墓地列表'
+    console.log(dataTable)
+    option.fileName = name || '墓地列表'
     option.datas=[
       {
         sheetData: dataTable,
         sheetName:'sheet',
-        sheetFilter: columns.slice(0, -1).map(item => item.title),
-        sheetHeader: columns.slice(0, -1).map(item => item.title),
+        sheetFilter: columns.slice(myList ? 1 : 0, -1).map(item => item.title),
+        sheetHeader: columns.slice(myList ? 1 : 0, -1).map(item => item.title),
       }
     ];
     var toExcel = new ExportJsonExcel(option); 
@@ -85,6 +92,21 @@ export default () => {
   const getAreaList = async() => {
     const res = await request('/areaList', {})
     setAreaList(res.data.data)
+  }
+
+  const importExcel = (e) => {
+    const formData = new FormData()
+    formData.append('files', e.file)
+    request('/importExcel', { method: "POST", data: formData }).then(res => {
+      if (res.data.code === 200) {
+        message.success('导入成功')
+      } else if(res.data.code === 1000) {
+        downloadExcel(res.data.data, '导入失败列表')
+        message.error(res.data.msg)
+      } else {
+        message.error(res.data.msg)
+      }
+    })
   }
 
   useEffect(() => { getAreaList() }, [])
@@ -119,7 +141,7 @@ export default () => {
       dataIndex: 'sex',
       key: 'sex',
       width: 100,
-      render: h => h || '-'
+      render: h => h || h ? '男' : '女'
     },
     {
       title: '身份证',
@@ -144,8 +166,8 @@ export default () => {
     },
     {
       title: '购买者',
-      dataIndex: 'buyPeople',
-      key: 'buyPeople',
+      dataIndex: 'buyer',
+      key: 'buyer',
       width: 100,
       render: h => h || '-'
     },
@@ -261,14 +283,19 @@ export default () => {
   const extre = (
     <>
         <Link to='/addMudi'><Button type="primary">添加</Button></Link>
+        <Button  onClick={() => setShowEcharts(true)} style={{ marginLeft: '10px' }}>总览</Button>
         <Link to='/home'><Button type='info' style={{ marginLeft: '10px' }}>返回</Button></Link>
     </>
   )
+  const closeVisible = () => {
+    setShowEcharts(false)
+  }
 
   const handleSubmit = async() => {
     setLoading(true)
     const val = await form.getFieldsValue()
-    const res = await request('/searchMudiList', { method: 'POST', data: {...val} })
+    const res = await request('/searchMudiList', { method: 'POST', data: filterNoUseParams({...val}) })
+    setCurrent(1)
     setList(res.data.data)
     setLoading(false)
   }
@@ -277,7 +304,7 @@ export default () => {
     <Card className='computed' title="列表统计" bordered={false} extra={ extre }>
       <Form style={{margin: '15px 0 20px 0', padding: '15px 0'}} form={form}>
         <Row gutter={24}>
-          <Col span={6}>
+          <Col span={5}>
             <Form.Item label="墓地状态" name='status'>
               <Select placeholder='请选择状态' allowClear>
                 <Option value='0'>未出售</Option>
@@ -286,7 +313,7 @@ export default () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col span={5}>
             <Form.Item label="区域管理" name='areaId'>
               <Select placeholder="请选择区域" allowClear>
                 {
@@ -297,16 +324,22 @@ export default () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col span={5}>
             <Form.Item label="死者姓名" name='name'>
               <Input placeholder='请输入死者姓名'></Input>
             </Form.Item>
           </Col>
-          <Col span={6} style={{textAlign: 'right'}}>
+          <Col span={9} style={{textAlign: 'right'}}>
             <Button type="primary" onClick={handleSubmit}>查询</Button>
-            <Button type="info" style={{ marginLeft: '16px' }} onClick={ downloadExcel }>导出Excel</Button>
-            <Button type="info" style={{ marginLeft: '16px' }} onClick={ downloadExcel }>导入Excel</Button>
-            <Button type="info" style={{ marginLeft: '16px' }} onClick={ preview }>打印</Button>
+            <Button type="info" style={{ marginLeft: '16px' }} onClick={ () => downloadExcel('') }>导出Excel</Button>
+            <Button type="info" style={{ marginLeft: '16px' }} onClick={ () => downloadExcel([], 'Excel模板') }>下载Excel模板</Button>
+            <Upload
+              beforeUpload={() => false}
+              onChange={importExcel}
+              showUploadList={false}
+            >
+              <Button type="info" style={{ marginLeft: '16px' }}>导入Excel</Button>
+            </Upload>
           </Col>
         </Row>
         {/* <Row gutter={24}>
@@ -315,10 +348,13 @@ export default () => {
       {/* startprint */}
       <Table columns={columns} loading={loading} dataSource={list} scroll={{x: '2850px'}} bordered rowKey="id" pagination={{
         showTotal: h => `共计${h}条`,
-        total: list.length
+        total: list.length,
+        current: current,
+        onChange: ({current}) => setCurrent(current)
       }}/>
       {/* endprint */}
       {/* <Link to='/home'><Button type='info' style={{position: 'relative', top: '-48px'}}>返回</Button></Link> */}
+      <ReactEcharts visible={showEcharts} closeVisible={closeVisible} />
     </Card>
   )
 }
