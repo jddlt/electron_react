@@ -12,7 +12,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Computed from "./pages/Computed";
 import AddMudi from "./pages/Computed/AddMudi";
-import Detail from "./pages/Detail";
+import Detail from "./pages/Detail/index3";
 import Area from "./pages/Area";
 import Login from "./pages/Login";
 import SideBar from "./components/SideBar";
