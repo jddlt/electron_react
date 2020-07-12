@@ -109,7 +109,8 @@ export default function() {
     useEffect(() => {getAreaList()}, [])
     
     return (
-        <Card className='computed' title={<span style={{fontWeight: 'bold'}}>添加墓地</span>} bordered={false} extra={ extre }>
+        <Card className='computed' title={<span style={{fontWeight: 'bold', overflowY: 'hidden'}}>添加墓地</span>} bordered={false} extra={ extre }>
+            <div style={{width: '100%', height: 'calc(100vh - 112px)', overflowY: 'auto'}}>
             <Form form={form} initialValues={Default} style={{width: '400px', transform: 'translateX(-50%)', marginLeft: '50%'}} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} onValuesChange={e => handleFormChange(e)}>
                 <Form.Item label="当前状态" rules={[{ required: true, message: '当前状态不能为空' }]} name="status">
                     <Select placeholder="请选择当前状态" onChange={handleChange}>
@@ -207,6 +208,7 @@ export default function() {
                     <Button type='primary' onClick={ handleSubmit }>{ hasId ? '保存' : '确定' }</Button>
                 </Form.Item>
             </Form>
+            </div>
         </Card>
     )
 }

@@ -10,7 +10,7 @@ export function Message(res) {
   }
 }
 
-export function request(url, { method, data = {}, ...rest}) {
+export function request(url, { method = 'GET', data = {}, ...rest}) {
   return Request(url, { method, data, ...rest})
 }
 

@@ -40,7 +40,15 @@ export default (props) => {
                   shadowBlur: 5,
                   shadowOffsetX: 0,
                   shadowColor: 'rgba(30, 144, 255，0.5)'
-                }
+                },
+                normal:{ 
+                  label:{ 
+                      show: true, 
+                      formatter: '{b} : {c}' 
+                  }, 
+                  fontSize: 16,
+                  labelLine :{show:true} 
+              } 
               },
         }
     ],

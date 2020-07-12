@@ -302,7 +302,7 @@ export default () => {
 
   return (
     <Card className='computed' title="列表统计" bordered={false} extra={ extre }>
-      <Form style={{margin: '15px 0 20px 0', padding: '15px 0'}} form={form}>
+      <Form style={{margin: '10px 0 15px 0', padding: '10px 0'}} form={form}>
         <Row gutter={24}>
           <Col span={5}>
             <Form.Item label="墓地状态" name='status'>
@@ -331,14 +331,14 @@ export default () => {
           </Col>
           <Col span={9} style={{textAlign: 'right'}}>
             <Button type="primary" onClick={handleSubmit}>查询</Button>
-            <Button type="info" style={{ marginLeft: '16px' }} onClick={ () => downloadExcel('') }>导出Excel</Button>
-            <Button type="info" style={{ marginLeft: '16px' }} onClick={ () => downloadExcel([], 'Excel模板') }>下载Excel模板</Button>
+            <Button type="info" style={{ marginLeft: '8px' }} onClick={ () => downloadExcel('') }>导出Excel</Button>
+            <Button type="info" style={{ marginLeft: '8px' }} onClick={ () => downloadExcel([], 'Excel模板') }>下载Excel模板</Button>
             <Upload
               beforeUpload={() => false}
               onChange={importExcel}
               showUploadList={false}
             >
-              <Button type="info" style={{ marginLeft: '16px' }}>导入Excel</Button>
+              <Button type="info" style={{ marginLeft: '8px' }}>导入Excel</Button>
             </Upload>
           </Col>
         </Row>

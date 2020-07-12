@@ -48,7 +48,6 @@ export default () => {
   const getMudiList =  async(id) => {
     setAreaId(id)
     const res = await request('/mudiList', { data: { id } })
-    console.log(id)
     setList(res.data.data)
     setBuyInfo({
       sell: res.data.data.filter(item => item.status != 0).length,
@@ -177,11 +176,12 @@ export default () => {
                   <div className='type-item' style={{margin: '0 18px 0 30px'}}><i className='iconfont i' style={{color: 'red'}}>&#xe63a;</i><span>已出售未使用</span></div>
                   <div className='type-item'><i className='iconfont i' style={{color: 'green'}}>&#xe63a;</i><span>已出售已使用</span></div>
                 </div>
-                <div className='select'>
+                <div className='select' style={{paddingLeft: '20px',paddingRight: '20px'}}>
                   <div className='info'>
                     <div className='info-main'>{ (areaList.find(item => item.id === areaId) || {}).area } &nbsp; 已出售: <span style={{color: 'green'}}> {buyInfo.sell}</span> &nbsp; 未出售: <span style={{color: 'red'}}> {buyInfo.noSell}</span></div>
                   </div>
-                  <div className='list-info' style={{...box}}>
+                  <div style={{width: '100%', height: 'auto', overflowX: 'auto', height: parseInt(box.height) + 150 + 'px'}}>
+                  <div className='list-info' style={{...box, transform: 'translateX(40px)'}}>
                     {
                       list.map(item => (
                         <div className='list-item' key={item.id} style={{left: (((item.columns - 1 )* 58 + 12) + 'px'), bottom: (((item.row - 1 )* 52 + 12) + 'px')}}>
@@ -220,6 +220,7 @@ export default () => {
                         })
                       }
                     </div>
+                  </div>
                   </div>
                 </div>
             </div> 
