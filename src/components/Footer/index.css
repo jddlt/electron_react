@@ -1,0 +1,16 @@
+.main-footer{
+  background-color: #88cee8;
+  /* background: url('./../../static/imgs/bg.jpg') no-repeat center; */
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 60px;
+  font-size: 18px;
+  color: #fff;
+  font-weight: 500;
+}

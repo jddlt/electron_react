@@ -1,0 +1,275 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+HTML, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote,
+pre, form, fieldset, table, th, td {
+    border:none;
+    font-family:"微软雅黑","黑体","宋体";
+    font-size:14px;
+    margin:0px;
+    padding:0px;
+    user-select: none;
+    }
+html,body{
+    height: 100%;
+    width: 100%;
+    }
+address, caption, cite, code, dfn, em, strong, th, var {
+    font-style: normal;
+    font-weight: normal;
+}
+a{
+    text-decoration:none;
+}
+input::-ms-clear{
+    display:none;
+    }
+input::-ms-reveal{
+    display:none;
+}
+input{
+    -webkit-appearance: none;
+    margin: 0;
+    outline: none;
+    padding: 0;
+}
+input::-webkit-input-placeholder{
+    color: #ccc;
+}
+input::-ms-input-placeholder{
+    color: #ccc;
+}
+input::-moz-placeholder{
+    color: #ccc;
+}
+input[type=submit],input[type=button]{
+    cursor: pointer;
+}
+button[disabled], input[disabled] {
+    cursor: default;
+}
+img{
+    border:none;
+}
+ul,ol,li{
+    list-style-type:none;
+}
+/* flex */
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-sb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* font-size */
+.fs12{
+  font-size: 12px !important;
+  line-height: 100%;
+}
+.fs13{
+  font-size: 13px !important;
+  line-height: 100%;
+}
+.fs14{
+  font-size: 14px !important;
+  line-height: 100%;
+}
+.fs15{
+  font-size: 15px !important;
+  line-height: 100%;
+}
+.fs16{
+  font-size: 16px !important;
+  line-height: 100%;
+}
+.fs17{
+  font-size: 17px !important;
+  line-height: 100%;
+}
+.fs18{
+  font-size: 18px !important;
+  line-height: 100%;
+}
+.fs19{
+  font-size: 19px !important;
+  line-height: 100%;
+}
+.fs20{
+  font-size: 20px !important;
+  line-height: 100%;
+}
+
+/* text-align */
+.tar{
+  text-align: right;
+}
+.tac{
+  text-align: center;
+}
+.tal{
+  text-align: left;
+}
+
+/* float */
+.fl{
+  float: left;
+}
+.fr{
+  float: right;
+}
+/* color */
+.c6{
+  color: #666;
+}
+.c3{
+  color: #333;
+}
+.c9{
+  color: #999;
+}
+.cc{
+  color: #ccc;
+}
+.ce{
+  color: #eee;
+}
+.c0{
+  color: #000;
+}
+
+/* font-weight */
+.fwl{
+  font-weight: lighter;
+}
+.fwb{
+  font-weight: bold;
+}
+.fw5{
+  font-weight: 500;
+}
+.fw6{
+  font-weight: 600;
+}
+.fw7{
+  font-weight: 700;
+}
+.fw8{
+  font-weight: 800;
+}
+.fw9{
+  font-weight: 900;
+}
+.fwn{
+  font-weight: normal;
+}
+/* animation */
+.ani{
+  animation: all 1s;
+  display: inline-block;
+}
+/* 微调 */
+.pt1{
+  position: relative;
+  top: 1px;
+}
+.pt2{
+  position: relative;
+  top: 2px;
+}
+.pt3{
+  position: relative;
+  top: 3px;
+}
+.pt4{
+  position: relative;
+  top: 4px;
+}
+.pt-1{
+  position: relative;
+  top: -1px;
+}
+.pt-2{
+  position: relative;
+  top: -2px;
+}
+.pt-3{
+  position: relative;
+  top: -3px;
+}
+.pt-4{
+  position: relative;
+  top: -4px;
+}
+/* 小手 */
+.cp{
+  cursor: pointer;
+}
+.vlm{
+  vertical-align: middle;
+}
+/* margin */
+.mr2{
+  margin-right: 2px;
+}
+.mr4{
+  margin-right: 4px;
+}
+.mr5{
+  margin-right: 5px;
+}
+.mr10{
+  margin-right: 10px;
+}
+.mr15{
+  margin-right: 15px;
+}
+.mr20{
+  margin-right: 20px;
+}
+/* opacity */
+.op0{
+  opacity: 0.1;
+}
+.op1{
+  opacity: 0.1;
+}
+.op2{
+  opacity: 0.2;
+}
+.op3{
+  opacity: 0.3;
+}
+.op4{
+  opacity: 0.4;
+}
+.op5{
+  opacity: 0.5;
+}
+.op6{
+  opacity: 0.6;
+}
+.op7{
+  opacity: 0.7;
+}
+.op8{
+  opacity: 0.8;
+}
+.op9{
+  opacity: 0.9;
+}
