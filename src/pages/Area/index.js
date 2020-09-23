@@ -1,27 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { Card, Form, Button, message, Input, Table, Modal } from "antd";
+/* eslint-disable */
+import React, { useState, useEffect, useRef } from "react";
+import { Card, Form, Button, message, Input, Table, Modal, Select, TreeSelect  } from "antd";
 import { Link } from "react-router-dom";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { request } from "./../../utils/index";
 // import { exportExcel } from 'xlsx-oc'
 import "./index.css";
 
+const { Option } = Select
+
 export default () => {
   const [show, setShow] = useState(false);
   const [list, setList] = useState([]);
-
+  const originListRef = useRef([])
   const [form] = Form.useForm();
 
   const columns = [
     {
-      title: "区域id",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
       title: "区域名称",
       dataIndex: "area",
-      key: "area",
+      width: 300,
+      align: 'left'
+    },
+    {
+      title: "区域id",
+      dataIndex: "id",
+    },
+    {
+      title: "层级",
+      dataIndex: "layer",
     },
     {
       title: "操作",
@@ -40,11 +47,18 @@ export default () => {
         </>
       ),
     },
-  ].map((item) => ({ ...item, align: "center" }));
+  ].map((item) => ({ ...item, align: item.align || "center" }));
 
   const getAreaList = async () => {
     const res = await request("/areaList", {});
-    setList(res.data.data);
+    const newArr = []
+    res.data.data.forEach(item => {
+      if (!item.parentId) newArr.push({...item,  title: item.area, value: item.id, children: undefined, parentId: item.parentId, key: item.id })
+    });
+    originListRef.current = res.data.data
+    const formaterData = formatData(newArr, res.data.data)
+    console.log('formaterData', formaterData);
+    setList(formaterData);
   };
 
   const deleteArea = async (id) => {
@@ -55,7 +69,8 @@ export default () => {
       okText: "确定",
       cancelText: "取消",
       onOk: async () => {
-        const list = await request("/mudiList", { data: { id } });
+        console.log('2333', originListRef.current.filter(i => i.parentId == id).map(i => i.id).concat(id));
+        const list = await request("/mudiList", { data: { id: originListRef.current.filter(i => i.parentId == id).map(i => i.id).concat(id) } });
         if (list.data.data && list.data.data.length) {
           message.error(`删除失败,该区域下拥有${list.data.data.length}块墓地`);
         } else {
@@ -66,6 +81,26 @@ export default () => {
       },
     });
   };
+  const formatData = (newArr, data) => {
+    return newArr.map(i => {
+      const child = data.filter(_item => _item.parentId && _item.parentId == i.id).map(item => ({ ...item, title: item.area, value: item.id, children: undefined, parentId: item.parentId, key: item.id }))
+      console.log('child', child);
+      return {
+        ...i,
+        children: child.length ? formatData(child, data) : undefined
+      }
+    })
+  }
+
+
+  // const findChild = (newArr, data) => {
+  //   for (let i = 0; i < newArr.length; i++) {
+  //     const item = newArr[i]
+  //     const child = data.filter(_item => _item.parentId == item.id).map(item => ({ title: item.area, value: item.id, children: [] }))
+  //     item.children.concat(child)
+  //     return findChild(child, data)
+  //   }
+  // }
 
   useEffect(() => {
     getAreaList();
@@ -73,17 +108,19 @@ export default () => {
 
   const extre = (
     <>
-      <Button onClick={() => setShow(true)} type="primary">
+      <Button onClick={() => {
+        form.resetFields()
+        setShow(true)
+      }} type="primary">
         添加
       </Button>
-      {/* <Link to='/home'><Button type='info' style={{ marginLeft: '10px' }}>返回</Button></Link> */}
     </>
   );
   const handleOk = async () => {
     const val = await form.validateFields();
     const res = await request("/addArea", {
       method: "POST",
-      data: { area: val.area },
+      data: { area: val.area, parentId: val.parentId, layer: originListRef.current.find(i => i.id == val.parentId)?.layer },
     });
     getAreaList();
     setShow(false);
@@ -106,6 +143,21 @@ export default () => {
           name="area"
         >
           <Input placeholder="请输入区域名称"></Input>
+        </Form.Item>
+      </Form>
+      <Form form={form}>
+        <Form.Item
+          label="上级区域"
+          // rules={[{ required: true, message: "区域名称不能为空" }]}
+          name="parentId"
+        >
+          <TreeSelect
+          allowClears
+            style={{ width: '100%' }}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            treeData={list}
+            placeholder="选择上级区域"
+          />
         </Form.Item>
       </Form>
     </Modal>

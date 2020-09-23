@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -8,6 +9,7 @@ import {
   Row,
   Col,
   //   RadioGroup,
+  TreeSelect,
   Radio,
   Button,
   InputNumber,
@@ -31,7 +33,7 @@ export default function () {
   const [show, setShow] = useState(false);
   const [list, setList] = useState([]);
   const [areaList, setAreaList] = useState([]);
-  const [Default, setDefault] = useState({});
+  const [Default, setDefault] = useState({status: '0'});
   const [hasId, setHasId] = useState(0);
   const handleSubmit = async () => {
     const val = await form.validateFields();
@@ -115,10 +117,25 @@ export default function () {
       form.resetFields();
     }
   }, [Default]);
+  const formatData = (newArr, data) => {
+    return newArr.map(i => {
+      const child = data.filter(_item => _item.parentId && _item.parentId == i.id).map(item => ({ ...item, title: item.area, value: item.id, children: undefined, parentId: item.parentId, key: item.id }))
+      console.log('child', child);
+      return {
+        ...i,
+        children: child.length ? formatData(child, data) : undefined
+      }
+    })
+  }
 
   const getAreaList = async () => {
     const res = await request("/areaList", {});
-    setAreaList(res.data.data);
+    const newArr = []
+    res.data.data.forEach(item => {
+      if (!item.parentId) newArr.push({...item,  title: item.area, value: item.id, children: undefined, parentId: item.parentId, key: item.id })
+    });
+    const formaterData = formatData(newArr, res.data.data)
+    setAreaList(formaterData);
   };
   const handleFormChange = (e) => {
     console.log(e);
@@ -156,9 +173,9 @@ export default function () {
             <Form.Item
               {...layout}
               label="当前状态"
+              initialValues={0}
               rules={[{ required: true, message: "当前状态不能为空" }]}
               name="status"
-              {...layout}
             >
               <Select placeholder="请选择当前状态" onChange={handleChange}>
                 <Select.Option value="0">未出售</Select.Option>
@@ -170,7 +187,6 @@ export default function () {
           <Col span={8}>
             <Form.Item {...layout} label="墓位编号" required>
               <Form.Item
-                {...layout}
                 rules={[{ required: true, message: "排数不能为空" }]}
                 name="row"
                 style={{
@@ -224,13 +240,20 @@ export default function () {
               rules={[{ required: true, message: "所在区域不能为空" }]}
               name="areaId"
             >
-              <Select placeholder="请选择所在区域">
+              {/* <Select placeholder="请选择所在区域">
                 {areaList.map((item) => (
                   <Select.Option value={item.id} key={item.id}>
                     {item.area}
                   </Select.Option>
                 ))}
-              </Select>
+              </Select> */}
+              <TreeSelect
+          allowClears
+            style={{ width: '100%' }}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            treeData={areaList}
+            placeholder="请选择所在区域"
+          />
             </Form.Item>
           </Col>
           <Col span={8}>

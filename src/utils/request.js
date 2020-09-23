@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const baseUrl = "http://230589bu77.51mypc.cn";
-// const baseUrl = 'http://127.0.0.1:3030'
+// const baseUrl = "http://230589bu77.51mypc.cn";
+const baseUrl = 'http://127.0.0.1:3030'
 
 export default function request(url, { method, data = {}, query, ...rest }) {
   return axios({

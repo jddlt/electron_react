@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from "react";
 import {
   HashRouter,
@@ -19,14 +20,11 @@ import SideBar from "./components/SideBar";
 import "./app.css";
 
 function App(props) {
-  const history = useHistory();
-  const path = history?.location?.pathname;
-  console.log(12345, path);
-
+console.log('LocationL', location.hash);
   return (
     <div className="app" style={{ overflowY: "hidden", padding: "60px 0" }}>
       <HashRouter>
-        {/* {path && path !== "/login" && <Header />} */}
+        {/* { location.hash !== '#/login' && <Header /> } */}
         <Header />
         <div
           style={{
@@ -36,7 +34,6 @@ function App(props) {
             height: "calc(100vh - 120px)",
           }}
         >
-          {/* {path && path !== "/login" && <SideBar />} */}
           <SideBar />
           <div
             style={{
@@ -46,9 +43,6 @@ function App(props) {
             }}
           >
             <Switch>
-              {/* <Route exact path="/list" component={List}/> */}
-              {/* { where === 1 && <Redirect to='/area'></Redirect>}
-          { where === 2 && <Redirect to='/computed'></Redirect>} */}
               <Route exact path="/login" component={Login} />
               <Route exact path="/detail" component={Detail} />
               <Route exact path="/home" component={Home} />
@@ -59,7 +53,7 @@ function App(props) {
             </Switch>
           </div>
         </div>
-        {/* {path && path !== "/login" && <Footer />} */}
+        {/* { location.hash !== '#/login' && <Footer /> } */}
         <Footer />
       </HashRouter>
     </div>

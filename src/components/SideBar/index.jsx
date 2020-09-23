@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import { MailOutlined } from "@ant-design/icons";

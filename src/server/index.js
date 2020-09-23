@@ -31,8 +31,8 @@ const db = mysql.createConnection({
 })
 
 app.post('/addArea', async(req, res) => {
-    const { area } = await postParams(req)
-    var SQL = `INSERT INTO area(area) VALUES("${area}")`;
+    const { area, parentId, layer } = await postParams(req)
+    var SQL = `INSERT INTO area(area,parentId,layer) VALUES("${area}","${parentId}","${layer}")`;
     db.query(SQL, (err) => {
         if (err) {
             myError(res, err)
@@ -57,7 +57,7 @@ app.get('/areaList', async(req, res) => {
 
 app.get('/deleteArea', async(req, res) => {
     const { id } = req.query
-    var SQL = `DELETE FROM area WHERE id=${id}`;
+    var SQL = `DELETE FROM area WHERE id=${id} OR parentId=${id}`;
     db.query(SQL, (err) => {
         if (err) {
             myError(res, err)
@@ -226,7 +226,7 @@ app.get('/detailById', async(req, res) => {
 
 app.get('/mudiList', (req, res) => {
     const { id } = req.query
-    const SQL = !id ? 'SELECT * FROM mudi' : `SELECT * FROM mudi WHERE areaId=${id}`
+    const SQL = !id ? 'SELECT * FROM mudi' : `SELECT * FROM mudi WHERE areaId in (${id.join(',')})`
     db.query(SQL, (err, data) => {
         if (err) {
             myError(res, err)

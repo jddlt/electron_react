@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Button, Input, message, Spin } from "antd";
+import { Form, Button, Input, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 // import { browserHistory } from 'react-router'
 import { Redirect } from "react-router-dom";

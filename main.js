@@ -8,8 +8,8 @@ Menu.setApplicationMenu(null);
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1366,
-    height: 768,
+    width: 1250,
+    height: 839,
     minHeight: 700,
     minWidth: 1200,
     webPreferences: {

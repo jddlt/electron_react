@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { request, filterNoUseParams, Message } from "./../../utils/index";
 import moment from "moment";
@@ -73,7 +74,7 @@ const Home = () => {
       data: filterNoUseParams({
         ...val,
         status: current.status + 1,
-        diedDay: val.diedDay && moment(val.diedDay).format("YYYY-MSM-DD"),
+        diedDay: val.diedDay && moment(val.diedDay).format("YYYY-MM-DD"),
         buyDay: val.buyDay && moment(val.buyDay).format("YYYY-MM-DD HH:mm:ss"),
         useDay: val.useDay && moment(val.useDay).format("YYYY-MM-DD"),
       }),
@@ -122,7 +123,7 @@ const Home = () => {
           >
             <div
               className={
-                "really-mudi " +
+                "really-mudi cp " +
                 (item.status == 0
                   ? "no-buy-bg"
                   : item.status == 1
