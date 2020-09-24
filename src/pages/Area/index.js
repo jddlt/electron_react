@@ -118,9 +118,10 @@ export default () => {
   );
   const handleOk = async () => {
     const val = await form.validateFields();
+    console.log('val', val);
     const res = await request("/addArea", {
       method: "POST",
-      data: { area: val.area, parentId: val.parentId, layer: originListRef.current.find(i => i.id == val.parentId)?.layer },
+      data: { area: val.area, parentId: val.parentId || null, layer: originListRef.current.find(i => i.id == val.parentId).layer || 0 },
     });
     getAreaList();
     setShow(false);

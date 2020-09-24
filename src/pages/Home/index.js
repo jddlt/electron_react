@@ -15,6 +15,7 @@ import {
   Col,
   TreeSelect,
 } from "antd";
+import empty from './../../static/imgs/empty.png'
 import { useHistory } from "react-router";
 
 const { Group } = Radio;
@@ -28,6 +29,7 @@ const Home = () => {
   const [areaId, setAreaId] = useState(null);
   const [visible, setVisible] = useState(false);
   const [info, setInfo] = useState({});
+  const [value, setValue] = useState(undefined)
   const [current, setCurrent] = useState({});
   const [form] = Form.useForm();
   const history = useHistory();
@@ -48,6 +50,7 @@ const Home = () => {
       return {
         ...i,
         children: child.length ? formatData(child, data) : undefined,
+        // disabled: child.length
       };
     });
   };
@@ -68,7 +71,8 @@ const Home = () => {
     });
     const formaterData = formatData(newArr, res.data.data);
     setAreaList(formaterData);
-    getMudiList([res.data.data[0].id]);
+    getMudiList(res.data.data[0].id);
+    setValue(res.data.data[0].id)
   };
 
   const getMudiList = async (id) => {
@@ -121,7 +125,7 @@ const Home = () => {
   useEffect(() => {
     getAreaList();
   }, []);
-
+  console.log('areaList', areaList);
   return (
     <div className="out-box">
       <div className="tips" style={{ position: "relative" }}>
@@ -133,19 +137,25 @@ const Home = () => {
         <span>未出售</span>
         <TreeSelect
           allowClears
+          value={value}
           style={{
-            width: "300px",
-            left: "0",
-            top: "0",
-            height: "100%",
+            width: "200px",
+            left: "12px",
+            top: "9px",
+            // height: "100%",
+            border: 'none',
             position: "absolute",
           }}
+          onChange={e => { getMudiList(e); setValue(e) }}
           dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
           treeData={areaList}
           placeholder="请选择所在区域"
         />
       </div>
-      <div
+      {
+        info.maxRow && info.maxCol
+        ? 
+        <div
         className="main-home"
         style={{
           gridTemplateRows: `repeat(${info.maxRow}, 100px)`,
@@ -202,6 +212,12 @@ const Home = () => {
           </Popconfirm>
         ))}
       </div>
+      : <div className="main-home-empty">
+        <img src={empty} alt='空' style={{width: '400px', marginTop: '-200px', userSelect: 'none'}} />
+        <div style={{fontSize: '16px', color: '#999', letterSpacing: '1px'}}>该区域下暂无数据</div>
+      </div>
+      }
+      
       <MyModal
         current={current}
         visible={visible}

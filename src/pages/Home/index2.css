@@ -12,6 +12,14 @@
   padding: 15px;
   position: relative;
 }
+.main-home-empty{
+  width: calc(100% - 15px);
+  height: calc(100% - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 .mudi-box{
   border: 1px dashed #ddd;
