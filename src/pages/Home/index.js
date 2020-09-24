@@ -158,8 +158,10 @@ const Home = () => {
         <div
         className="main-home"
         style={{
-          gridTemplateRows: `repeat(${info.maxRow}, 100px)`,
-          gridTemplateColumns: `repeat(${info.maxCol}, 100px)`,
+          // gridTemplateRows: `repeat(${info.maxRow}, 100px)`,
+          // gridTemplateColumns: `repeat(${info.maxCol}, 100px)`,
+          // gridTemplateRows: `${new Array(info.maxRow).fill('100px').join(' ')}`,
+          // gridTemplateColumns: `${new Array(info.maxCol).fill('100px').join(' ')}`,
         }}
       >
         {new Array(info.maxRow * info.maxCol || 0).fill(null).map((item) => (
