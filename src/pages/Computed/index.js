@@ -13,6 +13,7 @@ import {
   Table,
   Divider,
   Upload,
+  TreeSelect,
 } from "antd";
 import { Link } from "react-router-dom";
 import ExportJsonExcel from "js-export-excel";
@@ -104,7 +105,39 @@ export default () => {
 
   const getAreaList = async () => {
     const res = await request("/areaList", {});
-    setAreaList(res.data.data);
+    const newArr = [];
+    res.data.data.forEach((item) => {
+      if (!item.parentId)
+        newArr.push({
+          ...item,
+          title: item.area,
+          value: item.id,
+          children: undefined,
+          parentId: item.parentId,
+          key: item.id,
+        });
+    });
+    const formaterData = formatData(newArr, res.data.data);
+    setAreaList(formaterData);
+  };
+  const formatData = (newArr, data) => {
+    return newArr.map((i) => {
+      const child = data
+        .filter((_item) => _item.parentId && _item.parentId == i.id)
+        .map((item) => ({
+          ...item,
+          title: item.area,
+          value: item.id,
+          children: undefined,
+          parentId: item.parentId,
+          key: item.id,
+        }));
+      console.log("child", child);
+      return {
+        ...i,
+        children: child.length ? formatData(child, data) : undefined,
+      };
+    });
   };
 
   const importExcel = (e) => {
@@ -359,13 +392,20 @@ export default () => {
           </Col>
           <Col span={5}>
             <Form.Item label="区域管理" name="areaId">
-              <Select placeholder="请选择区域" allowClear>
+              {/* <Select placeholder="请选择区域" allowClear>
                 {areaList.map((item) => (
                   <Option value={item.id} key={item.id}>
                     {item.area}
                   </Option>
                 ))}
-              </Select>
+              </Select> */}
+              <TreeSelect
+                allowClears
+                style={{ width: "100%" }}
+                dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+                treeData={areaList}
+                placeholder="请选择区域"
+              />
             </Form.Item>
           </Col>
           <Col span={5}>

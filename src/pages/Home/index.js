@@ -13,6 +13,7 @@ import {
   Radio,
   Row,
   Col,
+  TreeSelect,
 } from "antd";
 import { useHistory } from "react-router";
 
@@ -31,10 +32,43 @@ const Home = () => {
   const [form] = Form.useForm();
   const history = useHistory();
 
+  const formatData = (newArr, data) => {
+    return newArr.map((i) => {
+      const child = data
+        .filter((_item) => _item.parentId && _item.parentId == i.id)
+        .map((item) => ({
+          ...item,
+          title: item.area,
+          value: item.id,
+          children: undefined,
+          parentId: item.parentId,
+          key: item.id,
+        }));
+      console.log("child", child);
+      return {
+        ...i,
+        children: child.length ? formatData(child, data) : undefined,
+      };
+    });
+  };
+
   const getAreaList = async () => {
     const res = await request("/areaList", {});
-    setAreaList(res.data.data);
-    getMudiList(res.data.data[0].id);
+    const newArr = [];
+    res.data.data.forEach((item) => {
+      if (!item.parentId)
+        newArr.push({
+          ...item,
+          title: item.area,
+          value: item.id,
+          children: undefined,
+          parentId: item.parentId,
+          key: item.id,
+        });
+    });
+    const formaterData = formatData(newArr, res.data.data);
+    setAreaList(formaterData);
+    getMudiList([res.data.data[0].id]);
   };
 
   const getMudiList = async (id) => {
@@ -90,13 +124,26 @@ const Home = () => {
 
   return (
     <div className="out-box">
-      <div className="tips">
+      <div className="tips" style={{ position: "relative" }}>
         <div className="really-use"></div>
         <span>已销售已入葬</span>
         <div className="use"></div>
         <span>已销售未入葬</span>
         <div className="no-buy"></div>
         <span>未出售</span>
+        <TreeSelect
+          allowClears
+          style={{
+            width: "300px",
+            left: "0",
+            top: "0",
+            height: "100%",
+            position: "absolute",
+          }}
+          dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+          treeData={areaList}
+          placeholder="请选择所在区域"
+        />
       </div>
       <div
         className="main-home"

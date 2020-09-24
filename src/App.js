@@ -17,10 +17,10 @@ import Detail from "./pages/Detail/index3";
 import Area from "./pages/Area";
 import Login from "./pages/Login";
 import SideBar from "./components/SideBar";
-import "./app.css";
+import "./App.css";
 
 function App(props) {
-console.log('LocationL', location.hash);
+  console.log("LocationL", location.hash);
   return (
     <div className="app" style={{ overflowY: "hidden", padding: "60px 0" }}>
       <HashRouter>
