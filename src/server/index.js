@@ -23,15 +23,15 @@ app.all("*", async function (req, res, next) {
 });
 
 const db = mysql.createConnection({
-  host: "127.0.0.1",
+  host: "47.102.218.8",
   user: "root",
-  password: "19961023",
-  database: "mudimanage",
+  password: "mrpzx",
+  database: "mudi",
 });
 
 app.post("/addArea", async (req, res) => {
   const { area, parentId, layer } = await postParams(req);
-  console.log('layer', layer);
+  console.log("layer", layer);
   var SQL = `INSERT INTO area(area,parentId,layer) VALUES("${area}",${parentId},"${
     +layer + 1
   }")`;
@@ -281,8 +281,8 @@ app.get("/mudiList", (req, res) => {
   const SQL = !id
     ? "SELECT * FROM mudi"
     : Array.isArray(id)
-      ? `SELECT * FROM mudi WHERE areaId in (${id.join(",")})`
-      : `SELECT * FROM mudi WHERE areaId=${id}`
+    ? `SELECT * FROM mudi WHERE areaId in (${id.join(",")})`
+    : `SELECT * FROM mudi WHERE areaId=${id}`;
   db.query(SQL, (err, data) => {
     if (err) {
       myError(res, err);
