@@ -164,8 +164,6 @@ export default function () {
         form={form}
         initialValues={Default}
         style={{ width: "94%", margin: "0 auto" }}
-        //   labelCol={{ span: 6 }}
-        //   wrapperCol={{ span: 18 }}
         onValuesChange={(e) => handleFormChange(e)}
       >
         <Row gutter={24}>
@@ -223,6 +221,46 @@ export default function () {
           <Col span={8}>
             <Form.Item
               {...layout}
+              label="墓地名称"
+              rules={[{ required: true, message: "请输入墓地名称" }]}
+              name="mudiName"
+            >
+              <Input placeholder='请输入墓地名称' />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              {...layout}
+              label="墓碑材质"
+              rules={[{ required: true, message: "请输入墓碑材质" }]}
+              name="material"
+            >
+              <Input placeholder='请输入墓碑材质' />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              {...layout}
+              label="墓碑材质"
+              rules={[{ required: true, message: "请输入墓碑材质" }]}
+              name="material"
+            >
+              <Input placeholder='请输入墓碑材质' />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              {...layout}
+              label="单价"
+              rules={[{ required: true, message: "请输入单价" }]}
+              name="basePrice"
+            >
+              <Input placeholder='请输入单价' />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              {...layout}
               label="穴位类型"
               rules={[{ required: true, message: "穴位类型不能为空" }]}
               name="type"
@@ -236,34 +274,17 @@ export default function () {
           <Col span={8}>
             <Form.Item
               {...layout}
-              label="所在区域"
-              rules={[{ required: true, message: "所在区域不能为空" }]}
+              label="所属区域"
+              rules={[{ required: true, message: "所属区域不能为空" }]}
               name="areaId"
             >
-              {/* <Select placeholder="请选择所在区域">
-                {areaList.map((item) => (
-                  <Select.Option value={item.id} key={item.id}>
-                    {item.area}
-                  </Select.Option>
-                ))}
-              </Select> */}
               <TreeSelect
-          allowClears
-            style={{ width: '100%' }}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={areaList}
-            placeholder="请选择所在区域"
-          />
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item
-              {...layout}
-              label="基本价格"
-              rules={[{ required: true, message: "基本价格不能为空" }]}
-              name="basePrice"
-            >
-              <Input placeholder="请输入基本价格"></Input>
+              allowClears
+                style={{ width: '100%' }}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={areaList}
+                placeholder="请选择所属区域"
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -428,16 +449,142 @@ export default function () {
                 </Col>
               </>
             )}
-          {/* <Col span={8}>
-            <Form.Item
-{...layout} wrapperCol={{ offset: 6 }}>
-              <Button type="primary" onClick={handleSubmit}>
-                {hasId ? "保存" : "确定"}
-              </Button>
-            </Form.Item>
-          </Col> */}
         </Row>
       </Form>
     </Card>
   );
 }
+
+// 直接添加已使用的墓地, 暂时不用
+// {form.getFieldValue("status") != 0 &&
+//             form.getFieldValue("status") !== "未出售" && (
+//               <>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="死者姓名"
+//                     rules={[{ required: true, message: "死者姓名不能为空" }]}
+//                     name="name"
+//                   >
+//                     <Input placeholder="请输入死者姓名"></Input>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="性别"
+//                     rules={[{ required: true, message: "性别不能为空" }]}
+//                     name="sex"
+//                   >
+//                     <Group defaultValue={Default.sex}>
+//                       <Radio value="1">男</Radio>
+//                       <Radio value="0">女</Radio>
+//                     </Group>
+//                     {/* <Input placeholder='请输入性别'></Input> */}
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="身份证"
+//                     rules={[{ required: true, message: "身份证不能为空" }]}
+//                     name="card"
+//                   >
+//                     <Input placeholder="请输入身份证"></Input>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="村居"
+//                     rules={[{ required: true, message: "村居不能为空" }]}
+//                     name="village"
+//                   >
+//                     <Input placeholder="请输入村居"></Input>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="死亡日期"
+//                     rules={[{ required: true, message: "死亡日期不能为空" }]}
+//                     name="diedDay"
+//                   >
+//                     <DatePicker
+//                       locale={locale}
+//                       placeholder="请输入死亡日期"
+//                       style={{ width: "100%" }}
+//                     ></DatePicker>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="购买者"
+//                     rules={[{ required: true, message: "购买者不能为空" }]}
+//                     name="buyer"
+//                   >
+//                     <Input placeholder="请输入购买者"></Input>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="联系电话"
+//                     rules={[{ required: true, message: "联系电话不能为空" }]}
+//                     name="phone"
+//                   >
+//                     <Input placeholder="请输入联系电话"></Input>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="地址"
+//                     rules={[{ required: true, message: "地址不能为空" }]}
+//                     name="address"
+//                   >
+//                     <Input placeholder="请输入地址"></Input>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="购买日期"
+//                     rules={[{ required: true, message: "购买日期不能为空" }]}
+//                     name="buyDay"
+//                   >
+//                     <DatePicker
+//                       locale={locale}
+//                       placeholder="请输入购买日期"
+//                       showTime
+//                       style={{ width: "100%" }}
+//                     ></DatePicker>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="销售经办人"
+//                     rules={[{ required: true, message: "销售经办人不能为空" }]}
+//                     name="manager"
+//                   >
+//                     <Input placeholder="请输入销售经办人"></Input>
+//                   </Form.Item>
+//                 </Col>
+//                 <Col span={8}>
+//                   <Form.Item
+//                     {...layout}
+//                     label="使用日期"
+//                     rules={[{ required: true, message: "使用日期不能为空" }]}
+//                     name="useDay"
+//                   >
+//                     <DatePicker
+//                       locale={locale}
+//                       placeholder="请输入使用日期"
+//                       style={{ width: "100%" }}
+//                     ></DatePicker>
+//                   </Form.Item>
+//                 </Col>
+//               </>
+//             )}
