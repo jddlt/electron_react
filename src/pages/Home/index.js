@@ -5,7 +5,6 @@ import moment from "moment";
 import "./index2.css";
 import {
   Popconfirm,
-  message,
   Form,
   Input,
   DatePicker,
@@ -14,15 +13,22 @@ import {
   Row,
   Col,
   TreeSelect,
+   Select
 } from "antd";
 import empty from './../../static/imgs/empty.png'
 import { useHistory } from "react-router";
 
 const { Group } = Radio;
+const { Option } = Select;
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 18 },
 };
+const sellType = {
+  0: '付费购买',
+  1: '免费迁入',
+  2: '免费无偿'
+}
 const Home = () => {
   const [areaList, setAreaList] = useState([]);
   const [list, setList] = useState([]);
@@ -125,7 +131,7 @@ const Home = () => {
   useEffect(() => {
     getAreaList();
   }, []);
-  console.log('areaList', areaList);
+  console.log('form.getFieldValue("sellType")', form.getFieldValue('sellType'));
   return (
     <div className="out-box">
       <div className="tips" style={{ position: "relative" }}>
@@ -240,6 +246,8 @@ const MyModal = ({
   areaList,
   form,
 }) => {
+  const [status, setStatus] = useState(null)
+  console.log('status', status);
   return (
     <Modal
       title={current.status == 0 ? "编辑为已出售" : "编辑为已使用"}
@@ -254,6 +262,11 @@ const MyModal = ({
     >
       <Form form={form} labelCol={{ span: 7 }} wrapperCol={{ span: 17 }}>
         <Row gutter={24}>
+          <Col span={12} {...layout}>
+            <Form.Item label="墓地名称">
+              { current.mudiName || '--' }
+            </Form.Item>
+          </Col>
           <Col span={12} {...layout}>
             <Form.Item label="所在区域">
               {(areaList.find((item) => item.id === current.areaId) || {}).area}
@@ -277,6 +290,33 @@ const MyModal = ({
             <>
               <Col span={12} {...layout}>
                 <Form.Item
+                  label="购买性质"
+                  rules={[{ required: true, message: "请选择购买性质" }]}
+                  name="sellType"
+                >
+                  <Select placeholder='请选择购买性质' onChange={e => setStatus(e)}>
+                    {
+                      Object.entries(sellType).map(item => (
+                        <Option key={item[0]} value={item[0]}>{item[1]}</Option>
+                      ))
+                    }
+                  </Select>
+                  
+                </Form.Item>
+              </Col>
+              {
+                status === '0' && <Col span={12} {...layout}>
+                <Form.Item
+                  label="购买价格"
+                  rules={[{ required: true, message: "购买价格不能为空" }]}
+                  name="sellPrice"
+                >
+                  <Input placeholder='请输入购买价格' />  
+                </Form.Item>
+              </Col>
+              }
+              <Col span={12} {...layout}>
+                <Form.Item
                   label="购买者"
                   rules={[{ required: true, message: "购买者不能为空" }]}
                   name="buyer"
@@ -293,7 +333,7 @@ const MyModal = ({
                   <Input placeholder="请输入联系电话"></Input>
                 </Form.Item>
               </Col>
-              <Col span={12} {...layout}>
+              {/* <Col span={12} {...layout}>
                 <Form.Item
                   label="地址"
                   rules={[{ required: true, message: "地址不能为空" }]}
@@ -301,7 +341,7 @@ const MyModal = ({
                 >
                   <Input placeholder="请输入地址"></Input>
                 </Form.Item>
-              </Col>
+              </Col> */}
               <Col span={12} {...layout}>
                 <Form.Item
                   label="购买日期"
@@ -379,7 +419,7 @@ const MyModal = ({
                   ></DatePicker>
                 </Form.Item>
               </Col>
-              <Col span={12} {...layout}>
+              {/* <Col span={12} {...layout}>
                 <Form.Item
                   label="使用日期"
                   rules={[{ required: true, message: "使用日期不能为空" }]}
@@ -390,7 +430,7 @@ const MyModal = ({
                     style={{ width: "100%" }}
                   ></DatePicker>
                 </Form.Item>
-              </Col>
+              </Col> */}
             </>
           )}
         </Row>

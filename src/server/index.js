@@ -246,6 +246,7 @@ app.post("/updateMudi", async (req, res) => {
       myError(res, err);
       return;
     }
+    console.log('data', data);
     if (data.length > 0) {
       mySend(res, {
         msg: `${params.row}排${params.columns}列已存在墓穴，编辑失败`,

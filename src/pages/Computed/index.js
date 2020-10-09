@@ -32,6 +32,12 @@ export default () => {
   const [current, setCurrent] = useState(1);
   const [showEcharts, setShowEcharts] = useState(false);
 
+  const sellType = {
+    0: '付费购买',
+    1: '免费迁入',
+    2: '免费无偿'
+  }
+
   const downloadExcel = (myList = false, name) => {
     const option = {};
     const mylist = myList || list;
@@ -168,15 +174,76 @@ export default () => {
       fixed: "left",
     },
     {
+      title: "墓地名称",
+      dataIndex: "mudiName",
+      width: 150,
+    },
+    {
       title: "墓位编号",
       key: "row",
       width: 100,
-      // fixed: 'left',
       render: (_, record) => (
         <div>
           {record.row}排{record.columns}号
         </div>
       ),
+    },
+    {
+      title: "墓碑材质",
+      dataIndex: "material",
+      width: 150,
+    },
+    {
+      title: "主碑规格",
+      dataIndex: "size",
+      width: 150,
+    },
+    {
+      title: "穴位类型",
+      dataIndex: "type",
+      width: 100,
+      key: "穴位类型",
+      render: (h) => <div>{h ? "双" : "单"}</div>,
+    },
+    {
+      title: "购买性质",
+      dataIndex: "sellType",
+      width: 120,
+      render: (h) => sellType[h],
+    },
+    {
+      title: "购买价格",
+      dataIndex: "sellPrice",
+      width: 100,
+      render: (h) => h || 0,
+    },
+    {
+      title: "墓地单价",
+      dataIndex: "basePrice",
+      width: 100,
+      key: "basePrice",
+      render: (h) => h || "-",
+    },
+    {
+      title: "维护管理费",
+      dataIndex: "managePrice",
+      width: 120,
+      key: "managePrice",
+      render: (h) => h || "-",
+    },
+    {
+      title: "其它费用",
+      dataIndex: "otherPrice",
+      width: 100,
+      key: "otherPrice",
+      render: (h) => h || "-",
+    },
+    {
+      title: "合计费用",
+      dataIndex: "totalPrice",
+      width: 100,
+      key: "totalPrice",
+      render: (h) => h || "-",
     },
     {
       title: "死者姓名",
@@ -239,41 +306,6 @@ export default () => {
       dataIndex: "buyDay",
       width: 200,
       key: "buyDay",
-      render: (h) => h || "-",
-    },
-    {
-      title: "穴位类型",
-      dataIndex: "type",
-      width: 100,
-      key: "穴位类型",
-      render: (h) => <div>{h ? "双" : "单"}</div>,
-    },
-    {
-      title: "墓位基价",
-      dataIndex: "basePrice",
-      width: 100,
-      key: "basePrice",
-      render: (h) => h || "-",
-    },
-    {
-      title: "维护管理费",
-      dataIndex: "managePrice",
-      width: 120,
-      key: "managePrice",
-      render: (h) => h || "-",
-    },
-    {
-      title: "其它费用",
-      dataIndex: "otherPrice",
-      width: 100,
-      key: "otherPrice",
-      render: (h) => h || "-",
-    },
-    {
-      title: "合计费用",
-      dataIndex: "totalPrice",
-      width: 100,
-      key: "totalPrice",
       render: (h) => h || "-",
     },
     {
@@ -437,7 +469,7 @@ export default () => {
         columns={columns}
         loading={loading}
         dataSource={list}
-        scroll={{ x: "2850px" }}
+        scroll={{ x: 'max-contant' }}
         bordered
         rowKey="id"
         pagination={{

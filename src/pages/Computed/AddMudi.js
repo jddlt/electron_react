@@ -92,6 +92,7 @@ export default function () {
         setHasId(id);
         const res = await request("/detailById", { data: { id } });
         const data = res.data.data[0];
+        console.log('data', data);
         // form.resetFields(res.data.data)
         setDefault({
           ...data,
@@ -107,6 +108,11 @@ export default function () {
           type: String(data.type),
           sex: String(data.sex),
         });
+        form.setFieldsValue({ status: data.status == 0
+          ? "未出售"
+          : data.status == 1
+          ? "已出售未使用"
+          : "已出售已使用", })
       }
     };
     init();
@@ -120,7 +126,6 @@ export default function () {
   const formatData = (newArr, data) => {
     return newArr.map(i => {
       const child = data.filter(_item => _item.parentId && _item.parentId == i.id).map(item => ({ ...item, title: item.area, value: item.id, children: undefined, parentId: item.parentId, key: item.id }))
-      console.log('child', child);
       return {
         ...i,
         children: child.length ? formatData(child, data) : undefined
@@ -148,6 +153,7 @@ export default function () {
   useEffect(() => {
     getAreaList();
   }, []);
+  console.log('form.getFieldValue("status")', form.getFieldValue("status"));
 
   return (
     <Card
@@ -241,11 +247,11 @@ export default function () {
           <Col span={8}>
             <Form.Item
               {...layout}
-              label="墓碑材质"
-              rules={[{ required: true, message: "请输入墓碑材质" }]}
-              name="material"
+              label="主碑规格"
+              rules={[{ required: true, message: "请输入主碑规格" }]}
+              name="size"
             >
-              <Input placeholder='请输入墓碑材质' />
+              <Input placeholder='请输入主碑规格(大小)' />
             </Form.Item>
           </Col>
           <Col span={8}>
