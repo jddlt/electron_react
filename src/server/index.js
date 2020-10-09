@@ -18,9 +18,11 @@ app.all("*", async function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Content-Type");
   res.header("Access-Control-Allow-Methods", "*");
-  res.header("Content-Type", "application/json;charset=utf-8");
+  // res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
+
+app.use(express.static(path.resolve(__dirname, 'dist')))
 
 const db = mysql.createConnection({
   host: "47.102.218.8",
