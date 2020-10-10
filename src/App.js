@@ -17,7 +17,7 @@ import Detail from "./pages/Detail/index3";
 import Area from "./pages/Area";
 import Login from "./pages/Login";
 import SideBar from "./components/SideBar";
-import "./App.css";
+import "./app.css";
 
 function App(props) {
   console.log("LocationL", location.hash);
