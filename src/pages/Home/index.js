@@ -268,6 +268,11 @@ const MyModal = ({
             </Form.Item>
           </Col>
           <Col span={12} {...layout}>
+            <Form.Item label="墓地编号">
+              { current.id }
+            </Form.Item>
+          </Col>
+          <Col span={12} {...layout}>
             <Form.Item label="所在区域">
               {(areaList.find((item) => item.id === current.areaId) || {}).area}
             </Form.Item>

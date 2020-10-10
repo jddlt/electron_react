@@ -33,7 +33,8 @@ export default function () {
   const [show, setShow] = useState(false);
   const [list, setList] = useState([]);
   const [areaList, setAreaList] = useState([]);
-  const [Default, setDefault] = useState({status: '0'});
+  // const [Default, setDefault] = useState({status: '0'});
+  const [count , setCount] = useState(0)
   const [hasId, setHasId] = useState(0);
   const handleSubmit = async () => {
     const val = await form.validateFields();
@@ -94,7 +95,8 @@ export default function () {
         const data = res.data.data[0];
         console.log('data', data);
         // form.resetFields(res.data.data)
-        setDefault({
+        form.resetFields()
+        form.setFieldsValue({
           ...data,
           buyDay: data.buyDay && moment(data.buyDay),
           diedDay: data.buyDay && moment(data.diedDay),
@@ -108,21 +110,21 @@ export default function () {
           type: String(data.type),
           sex: String(data.sex),
         });
-        form.setFieldsValue({ status: data.status == 0
-          ? "未出售"
-          : data.status == 1
-          ? "已出售未使用"
-          : "已出售已使用", })
+        // form.setFieldsValue({ status: data.status == 0
+        //   ? "未出售"
+        //   : data.status == 1
+        //   ? "已出售未使用"
+        //   : "已出售已使用", })
       }
     };
     init();
-  }, []);
+  }, [history]);
 
-  useEffect(() => {
-    if (Default.id) {
-      form.resetFields();
-    }
-  }, [Default]);
+  // useEffect(() => {
+  //   if (Default.id) {
+  //     form.resetFields();
+  //   }
+  // }, [Default]);
   const formatData = (newArr, data) => {
     return newArr.map(i => {
       const child = data.filter(_item => _item.parentId && _item.parentId == i.id).map(item => ({ ...item, title: item.area, value: item.id, children: undefined, parentId: item.parentId, key: item.id }))
@@ -148,12 +150,16 @@ export default function () {
 
   const handleChange = () => {
     setAreaList([...areaList]);
+    setTimeout(() => {
+      setCount(count + 1)
+      console.log('form.getFieldValue("status")', form.getFieldValue("status"));
+    }, 1000)
   };
 
   useEffect(() => {
     getAreaList();
   }, []);
-  console.log('form.getFieldValue("status")', form.getFieldValue("status"));
+  
 
   return (
     <Card
@@ -168,7 +174,7 @@ export default function () {
     >
       <Form
         form={form}
-        initialValues={Default}
+        initialValues={{ status: '0' }}
         style={{ width: "94%", margin: "0 auto" }}
         onValuesChange={(e) => handleFormChange(e)}
       >
@@ -177,7 +183,7 @@ export default function () {
             <Form.Item
               {...layout}
               label="当前状态"
-              initialValues={0}
+              // initialvalues='0'
               rules={[{ required: true, message: "当前状态不能为空" }]}
               name="status"
             >
@@ -271,7 +277,7 @@ export default function () {
               rules={[{ required: true, message: "穴位类型不能为空" }]}
               name="type"
             >
-              <Group defaultValue={Default.type}>
+              <Group defaultValue={0}>
                 <Radio value="0">单</Radio>
                 <Radio value="1">双</Radio>
               </Group>
@@ -285,7 +291,7 @@ export default function () {
               name="areaId"
             >
               <TreeSelect
-              allowClears
+              allowClear
                 style={{ width: '100%' }}
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                 treeData={areaList}
@@ -343,7 +349,7 @@ export default function () {
                     rules={[{ required: true, message: "性别不能为空" }]}
                     name="sex"
                   >
-                    <Group defaultValue={Default.sex}>
+                    <Group defaultValue={1}>
                       <Radio value="1">男</Radio>
                       <Radio value="0">女</Radio>
                     </Group>

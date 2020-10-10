@@ -240,7 +240,7 @@ app.post("/importExcel", upload.any(), async (req, res) => {
 app.post("/updateMudi", async (req, res) => {
   const params = await postParams(req);
   const { id } = req.query;
-  const repeatSQL = `SELECT * FROM mudi WHERE (row,columns,areaId) = (${params.row},${params.columns},${params.areaId}) AND id != ${id}`;
+  const repeatSQL = `SELECT * FROM mudi WHERE (row,columns,areaId) = (${params.row || 0},${params.columns || 0},${params.areaId || 0}) AND id != ${id}`;
   db.query(repeatSQL, (err, data) => {
     if (err) {
       myError(res, err);

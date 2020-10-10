@@ -364,7 +364,10 @@ export default () => {
 
   const extre = (
     <>
-      <Button onClick={() => setShowEcharts(true)} type="primary">
+      <Link to="/addMudi">
+            <Button type='primary'>添加</Button>
+          </Link>
+      <Button onClick={() => setShowEcharts(true)} style={{ marginLeft: "8px" }}>
         总览
       </Button>
       <Button
@@ -413,7 +416,7 @@ export default () => {
       {/* <div style={{ padding: "15px" }}> */}
       <Form style={{ margin: "3px 0 15px 0", padding: "10px 0" }} form={form}>
         <Row gutter={24}>
-          <Col span={5}>
+          <Col span={6}>
             <Form.Item label="墓地状态" name="status">
               <Select placeholder="请选择状态" allowClear>
                 <Option value="0">未出售</Option>
@@ -422,17 +425,10 @@ export default () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={5}>
-            <Form.Item label="区域管理" name="areaId">
-              {/* <Select placeholder="请选择区域" allowClear>
-                {areaList.map((item) => (
-                  <Option value={item.id} key={item.id}>
-                    {item.area}
-                  </Option>
-                ))}
-              </Select> */}
+          <Col span={6}>
+            <Form.Item label="区域筛选" name="areaId">
               <TreeSelect
-                allowClears
+                allowClear
                 style={{ width: "100%" }}
                 dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                 treeData={areaList}
@@ -440,12 +436,32 @@ export default () => {
               />
             </Form.Item>
           </Col>
-          <Col span={5}>
+          <Col span={6}>
             <Form.Item label="死者姓名" name="name">
               <Input placeholder="请输入死者姓名"></Input>
             </Form.Item>
           </Col>
-          <Col span={9} style={{ textAlign: "right" }}>
+          <Col span={6}>
+            <Form.Item label="墓地名称" name="mudiName">
+              <Input placeholder="请输入墓地名称"></Input>
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+          <Form.Item
+                  label="购买性质"
+                  name="sellType"
+                >
+                  <Select placeholder='请选择购买性质'>
+                    {
+                      Object.entries(sellType).map(item => (
+                        <Option key={item[0]} value={item[0]}>{item[1]}</Option>
+                      ))
+                    }
+                  </Select>
+                  
+                </Form.Item>
+          </Col>
+          <Col span={6} style={{ textAlign: "right" }}>
             <Button
               type="primary"
               onClick={handleSubmit}
@@ -453,9 +469,10 @@ export default () => {
             >
               查询
             </Button>
-            <Link to="/addMudi">
-              <Button>添加</Button>
-            </Link>
+            <Button onClick={() => {
+              form.resetFields()
+              handleSubmit()
+            }}>重置</Button>
           </Col>
         </Row>
         {/* <Row gutter={24}>
@@ -477,7 +494,7 @@ export default () => {
           total: list.length,
           current: current,
           onChange: ({ current }) => setCurrent(current),
-          pageSize: 5,
+          pageSize: 6,
           showSizeChanger: false,
         }}
       />
